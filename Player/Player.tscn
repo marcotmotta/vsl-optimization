@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://8dy4uqxvj06l"]
+
+[ext_resource type="Script" path="res://Player/Player.gd" id="1_4tjue"]
+[ext_resource type="Texture2D" uid="uid://b1j63r7erdkpy" path="res://icon.svg" id="1_8voul"]
+[ext_resource type="PackedScene" uid="uid://bpyjoyi1y4tbu" path="res://Weapons/Fireball/FireballController.tscn" id="3_s0ivj"]
+[ext_resource type="PackedScene" uid="uid://dmmklf73csdn7" path="res://Weapons/AreaController.tscn" id="4_6s8r8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i80ac"]
+radius = 20.0
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
+script = ExtResource("1_4tjue")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("1_8voul")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_i80ac")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="FireballController" parent="." instance=ExtResource("3_s0ivj")]
+
+[node name="AreaController" parent="." instance=ExtResource("4_6s8r8")]

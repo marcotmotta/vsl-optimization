@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=3 uid="uid://dyl1eqm060qhk"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_hvuxd"]
+[ext_resource type="PackedScene" uid="uid://8dy4uqxvj06l" path="res://Player/Player.tscn" id="1_nmqsx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xjsam"]
+size = Vector2(20, 2000)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_hvuxd")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="Background" type="ColorRect" parent="StaticBody2D"]
+offset_right = 1500.0
+offset_bottom = 1500.0
+color = Color(0.203922, 0.337255, 0.168627, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 750)
+shape = SubResource("RectangleShape2D_xjsam")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(1500, 750)
+shape = SubResource("RectangleShape2D_xjsam")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(750, 0)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_xjsam")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(750, 1500)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_xjsam")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="Player" parent="." instance=ExtResource("1_nmqsx")]
+position = Vector2(750, 750)
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
