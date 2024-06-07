@@ -11,13 +11,6 @@ script = ExtResource("1_hvuxd")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
-[node name="BackgroundLimit" type="ColorRect" parent="StaticBody2D"]
-offset_left = -1720.0
-offset_top = -1773.0
-offset_right = 3280.0
-offset_bottom = 3227.0
-color = Color(0.190121, 0.249605, 0.123174, 1)
-
 [node name="Background" type="ColorRect" parent="StaticBody2D"]
 offset_right = 1500.0
 offset_bottom = 1500.0

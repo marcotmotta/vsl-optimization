@@ -11,7 +11,7 @@ const TOTAL_CELLS = CELLS_PER_ROW * CELLS_PER_COL + 1
 
 var enemy_scene = preload("res://Enemies/Enemy.tscn")
 
-var max_enemies = 100
+var max_enemies = 30
 
 var enemies_spatial_groups = []
 var bullet_spatial_groups = []
@@ -25,7 +25,7 @@ func _ready():
 		bullet_spatial_groups.append([])
 
 func _process(delta):
-	print('FPS ', str(Engine.get_frames_per_second()))
+	#print('FPS ', str(Engine.get_frames_per_second()))
 	#print('enemies', ' ', get_tree().get_nodes_in_group('enemy').size())
 	#print('ALL ', get_tree().get_node_count())
 	pass
@@ -53,6 +53,7 @@ func getExpandedSpatialGroups(spatial_group, radius = 1):
 
 	return spatial_groups
 
+# spawn enemies FIXME: placeholder
 func _on_timer_timeout():
 	for i in range(max_enemies - get_tree().get_nodes_in_group('enemy').size()):
 		var enemy_instance = enemy_scene.instantiate()

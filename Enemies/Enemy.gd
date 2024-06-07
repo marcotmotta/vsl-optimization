@@ -1,6 +1,6 @@
 extends Node2D
 
-var speed = 100
+var speed = 80
 var player
 
 var spatial_group = -1

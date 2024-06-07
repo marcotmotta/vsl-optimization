@@ -1,0 +1,93 @@
+[gd_scene load_steps=9 format=3 uid="uid://dyl1eqm060qhk"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_hvuxd"]
+[ext_resource type="PackedScene" uid="uid://8dy4uqxvj06l" path="res://Player/Player.tscn" id="1_nmqsx"]
+[ext_resource type="Shader" path="res://Lightning.gdshader" id="3_prvkb"]
+[ext_resource type="Texture2D" uid="uid://b1j63r7erdkpy" path="res://icon.svg" id="4_s318n"]
+[ext_resource type="Shader" path="res://beam.gdshader" id="5_mp658"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xjsam"]
+size = Vector2(20, 2000)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iiilw"]
+shader = ExtResource("3_prvkb")
+shader_parameter/lightning_color = Color(0, 1, 1, 1)
+shader_parameter/size = 0.026
+shader_parameter/width = 0.185
+shader_parameter/speed = 0.5
+shader_parameter/cycle = 0.98
+shader_parameter/ratio = 0.5
+shader_parameter/time_shift = 0.115
+shader_parameter/strike_count = 1
+shader_parameter/strike_delay = 0.25
+shader_parameter/glow_intensity = 0.9
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_boxe1"]
+shader = ExtResource("5_mp658")
+shader_parameter/beams = 2
+shader_parameter/energy = 3.0
+shader_parameter/roughness = 3
+shader_parameter/frequency = 10
+shader_parameter/speed = 1.0
+shader_parameter/thickness = 0.006
+shader_parameter/outline_thickness = 0.03
+shader_parameter/beam_difference = 0.0
+shader_parameter/glow = 0.0
+shader_parameter/outline_glow = 0.0
+shader_parameter/color = Color(0.91, 1, 1, 1)
+shader_parameter/outline_color = Color(0.0500002, 0, 1, 1)
+shader_parameter/progress = 1.0
+shader_parameter/y_offset = 0.0
+shader_parameter/fixed_edge_size = 0.05
+shader_parameter/noise_scale = Vector2(1, 1)
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_hvuxd")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="Background" type="ColorRect" parent="StaticBody2D"]
+offset_right = 1500.0
+offset_bottom = 1500.0
+color = Color(0.203922, 0.337255, 0.168627, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 750)
+shape = SubResource("RectangleShape2D_xjsam")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(1500, 750)
+shape = SubResource("RectangleShape2D_xjsam")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(750, 0)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_xjsam")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(750, 1500)
+rotation = 1.5708
+shape = SubResource("RectangleShape2D_xjsam")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[node name="Player" parent="." instance=ExtResource("1_nmqsx")]
+position = Vector2(750, 750)
+
+[node name="Node2D" type="Node2D" parent="."]
+visible = false
+position = Vector2(415, 534)
+
+[node name="Sprite2D" type="Sprite2D" parent="Node2D"]
+material = SubResource("ShaderMaterial_iiilw")
+texture = ExtResource("4_s318n")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_boxe1")
+offset_left = -1.0
+offset_right = 499.0
+offset_bottom = 500.0
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

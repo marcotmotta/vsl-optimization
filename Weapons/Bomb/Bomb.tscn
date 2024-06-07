@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://dnd2ggwerwuox"]
+
+[ext_resource type="Script" path="res://Weapons/Bomb/Bomb.gd" id="1_flskn"]
+[ext_resource type="Texture2D" uid="uid://b1j63r7erdkpy" path="res://icon.svg" id="2_xin3b"]
+
+[node name="Bomb" type="Node2D"]
+script = ExtResource("1_flskn")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0.866667, 0, 1)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_xin3b")

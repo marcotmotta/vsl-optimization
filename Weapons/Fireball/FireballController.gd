@@ -26,9 +26,13 @@ func _get_closest_enemy():
 func _on_spawn_timer_timeout():
 	var selected_enemy = _get_closest_enemy()
 	if selected_enemy.enemy:
-		for i in range(5):
-			var shift = 0 if i == 0 else randi_range(-20, 20)
-			var fireball = fireball_scene.instantiate()
-			fireball.global_position = global_position
-			fireball.direction = selected_enemy.direction.rotated(deg_to_rad(shift))
-			map.add_child(fireball)
+		for i in range(2):
+			var shift = 0 if i == 0 else randi_range(-25, 25)
+			var fireball_instance = fireball_scene.instantiate()
+			fireball_instance.fireball_scene = fireball_scene
+			fireball_instance.global_position = global_position
+			fireball_instance.direction = selected_enemy.direction.rotated(deg_to_rad(shift))
+			fireball_instance.bounce_count = 1
+			fireball_instance.has_explosion = true
+			fireball_instance.bonus_aoe = 0
+			map.add_child(fireball_instance)

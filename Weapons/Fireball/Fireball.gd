@@ -1,14 +1,24 @@
 extends Node2D
 
+var fireball_scene
+var explosion_scene = preload("res://Weapons/Explosion/Explosion.tscn")
+
 var direction
-var speed = 250
+var speed = 200
 
 var spatial_group = -1
 
 var range = 30
 
+var bounce_count = 0
+var has_explosion = false
+var bonus_aoe = 0 # percentage?
+
 func _ready():
 	updateSpatialGroup()
+	$CPUParticles2D.emission_sphere_radius *= 1 + bonus_aoe
+	$CPUParticles2D.scale_amount_min *= 1 + bonus_aoe
+	range += 1 + bonus_aoe
 
 func _process(delta):
 	position = position + direction * speed * delta
@@ -26,6 +36,9 @@ func checkCollisions():
 			var distance = (enemy.position - position).length()
 			if distance < range:
 				enemy.die()
+				if has_explosion: explode()
+				if bounce_count > 0: bounce()
+				die()
 
 func updateSpatialGroup():
 	if position.x <= 0 or position.x >= get_parent().MAP_WIDTH or position.y <= 0 or position.y >= get_parent().MAP_HEIGHT:
@@ -40,6 +53,37 @@ func updateSpatialGroup():
 		get_parent().bullet_spatial_groups[spatial_group].erase(self)
 		spatial_group = new_spatial_group
 		get_parent().bullet_spatial_groups[spatial_group].append(self)
+
+func _get_random_enemy():
+	var enemies = get_tree().get_nodes_in_group("enemy")
+	var selected_enemy = null
+	var selected_enemy_direction = Vector2.ZERO
+
+	if enemies:
+		selected_enemy = enemies.pick_random()
+		selected_enemy_direction = (selected_enemy.global_position - global_position).normalized()
+
+	return {
+		'enemy': selected_enemy,
+		'direction': selected_enemy_direction
+	}
+
+func bounce():
+	bounce_count -= 1
+	var selected_enemy = _get_random_enemy()
+	var fireball_instance = fireball_scene.instantiate()
+	fireball_instance.fireball_scene = fireball_scene
+	fireball_instance.global_position = global_position
+	fireball_instance.direction = selected_enemy.direction
+	fireball_instance.bounce_count = bounce_count
+	fireball_instance.has_explosion = has_explosion
+	fireball_instance.bonus_aoe = bonus_aoe
+	get_parent().add_child(fireball_instance)
+
+func explode():
+	var explosion_instance = explosion_scene.instantiate()
+	explosion_instance.global_position = global_position
+	get_parent().add_child(explosion_instance)
 
 func die():
 	get_parent().bullet_spatial_groups[spatial_group].erase(self)
