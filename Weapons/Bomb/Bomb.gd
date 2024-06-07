@@ -7,10 +7,13 @@ var direction
 
 var time = 0
 
+func _ready():
+	randomize()
+	
+	$AnimationPlayer.play(str(randi_range(1, 2)))
+
 func _process(delta):
 	var invert = -1 if direction.x > 0 else 1
-	
-	print(p2 - position)
 
 	$Sprite2D.position = _quadratic_bezier(Vector2.ZERO, ((p2 - position) / 2).rotated(deg_to_rad(45 * invert)), p2 - position, time)
 	time += delta / 1.5

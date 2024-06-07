@@ -28,7 +28,10 @@ func pushNearbyEnemies(delta):
 
 func updateSpatialGroup():
 	# FIXME: dunno
-	if position.x <= 0 or position.x >= get_parent().MAP_WIDTH or position.y <= 0 or position.y >= get_parent().MAP_HEIGHT:
+	if global_position.x <= max(0, player.global_position.x - 800) or \
+	global_position.x >= min(get_parent().MAP_WIDTH, player.global_position.x + 800) or \
+	global_position.y <= max(0, player.global_position.y - 650) or \
+	global_position.y >= min(get_parent().MAP_HEIGHT, player.global_position.y + 650):
 		die()
 		return
 

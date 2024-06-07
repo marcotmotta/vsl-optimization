@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://8dy4uqxvj06l" path="res://Player/Player.tscn" id="1_nmqsx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xjsam"]
-size = Vector2(20, 2000)
+size = Vector2(20, 6000)
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_hvuxd")
@@ -12,32 +12,32 @@ script = ExtResource("1_hvuxd")
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 [node name="BackgroundLimit" type="ColorRect" parent="StaticBody2D"]
-offset_left = -1720.0
-offset_top = -1773.0
-offset_right = 3280.0
-offset_bottom = 3227.0
+offset_left = -1000.0
+offset_top = -1000.0
+offset_right = 4000.0
+offset_bottom = 4000.0
 color = Color(0.190121, 0.249605, 0.123174, 1)
 
 [node name="Background" type="ColorRect" parent="StaticBody2D"]
-offset_right = 1500.0
-offset_bottom = 1500.0
+offset_right = 3000.0
+offset_bottom = 3000.0
 color = Color(0.203922, 0.337255, 0.168627, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(0, 750)
+position = Vector2(0, 1500)
 shape = SubResource("RectangleShape2D_xjsam")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(1500, 750)
+position = Vector2(3000, 1500)
 shape = SubResource("RectangleShape2D_xjsam")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(750, 0)
+position = Vector2(1500, 0)
 rotation = 1.5708
 shape = SubResource("RectangleShape2D_xjsam")
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(750, 1500)
+position = Vector2(1500, 3000)
 rotation = 1.5708
 shape = SubResource("RectangleShape2D_xjsam")
 
@@ -45,6 +45,6 @@ shape = SubResource("RectangleShape2D_xjsam")
 autostart = true
 
 [node name="Player" parent="." instance=ExtResource("1_nmqsx")]
-position = Vector2(750, 750)
+position = Vector2(1500, 1500)
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

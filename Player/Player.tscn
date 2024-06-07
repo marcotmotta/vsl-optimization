@@ -22,8 +22,8 @@ shape = SubResource("CircleShape2D_i80ac")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="LightningController" parent="." instance=ExtResource("5_h6yyc")]
+[node name="BombController" parent="." instance=ExtResource("5_3ugr0")]
 
 [node name="FireballController" parent="." instance=ExtResource("3_s0ivj")]
 
-[node name="BombController" parent="." instance=ExtResource("5_3ugr0")]
+[node name="LightningController" parent="." instance=ExtResource("5_h6yyc")]
