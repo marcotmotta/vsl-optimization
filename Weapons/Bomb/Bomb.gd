@@ -1,6 +1,6 @@
 extends Node2D
 
-var explosion_scene = preload("res://Weapons/Explosion/Explosion.tscn")
+var poison_scene = preload("res://Weapons/Poison/Poison.tscn")
 
 var p2
 var direction
@@ -18,9 +18,9 @@ func _process(delta):
 	$Sprite2D.position = _quadratic_bezier(Vector2.ZERO, ((p2 - position) / 2).rotated(deg_to_rad(45 * invert)), p2 - position, time)
 	time += delta / 1.5
 	if time > 1:
-		var explosion_instance = explosion_scene.instantiate()
-		explosion_instance.global_position = $Sprite2D.global_position
-		get_parent().add_child(explosion_instance)
+		var poison_instance = poison_scene.instantiate()
+		poison_instance.global_position = $Sprite2D.global_position
+		get_parent().add_child(poison_instance)
 		queue_free()
 
 func _quadratic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, t: float):

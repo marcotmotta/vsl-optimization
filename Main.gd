@@ -11,12 +11,14 @@ const TOTAL_CELLS = CELLS_PER_ROW * CELLS_PER_COL + 1
 
 var enemy_scene = preload("res://Enemies/Enemy.tscn")
 
-var max_enemies = 30
-
 var enemies_spatial_groups = []
 var bullet_spatial_groups = []
 
 var player
+
+# level params
+const MAX_ENEMIES = 200
+var current_max_enemies = 10
 
 func _ready():
 	randomize()
@@ -58,13 +60,33 @@ func getExpandedSpatialGroups(spatial_group, radius = 1):
 	return spatial_groups
 
 # spawn enemies FIXME: placeholder
-func _on_timer_timeout():
-	for i in range(max_enemies - get_tree().get_nodes_in_group('enemy').size()):
-		# choose spawn point
+func _on_spawn_timer_timeout():
+	var current_enemies = get_tree().get_nodes_in_group('enemy').size()
+
+	# hard limit
+	# does not spawn any enemies if limit reached
+	if current_enemies >= MAX_ENEMIES: return
+
+	# level limit
+	# spawn 1 enemy if pool is full
+	print(current_enemies, current_enemies >= current_max_enemies)
+	if current_enemies >= current_max_enemies:
 		while(true):
+			# choose spawn point
 			var spawn_point = Vector2(randi_range(player.global_position.x - 750, player.global_position.x + 750), randi_range(player.global_position.y - 600, player.global_position.y + 600))
 			if ((spawn_point - player.global_position).length() > 500) and spawn_point.x > 0 and spawn_point.x < MAP_WIDTH and spawn_point.y > 0 and spawn_point.y < MAP_HEIGHT:
 				var enemy_instance = enemy_scene.instantiate()
 				enemy_instance.global_position = spawn_point
 				add_child(enemy_instance)
 				break
+	else:
+		var available_slots = current_max_enemies - current_enemies
+		for i in range(available_slots):
+			while(true):
+				# choose spawn point
+				var spawn_point = Vector2(randi_range(player.global_position.x - 750, player.global_position.x + 750), randi_range(player.global_position.y - 600, player.global_position.y + 600))
+				if ((spawn_point - player.global_position).length() > 500) and spawn_point.x > 0 and spawn_point.x < MAP_WIDTH and spawn_point.y > 0 and spawn_point.y < MAP_HEIGHT:
+					var enemy_instance = enemy_scene.instantiate()
+					enemy_instance.global_position = spawn_point
+					add_child(enemy_instance)
+					break

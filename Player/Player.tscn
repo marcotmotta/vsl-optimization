@@ -1,10 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://8dy4uqxvj06l"]
+[gd_scene load_steps=6 format=3 uid="uid://8dy4uqxvj06l"]
 
 [ext_resource type="Script" path="res://Player/Player.gd" id="1_4tjue"]
 [ext_resource type="Texture2D" uid="uid://b1j63r7erdkpy" path="res://icon.svg" id="1_8voul"]
-[ext_resource type="PackedScene" uid="uid://bpyjoyi1y4tbu" path="res://Weapons/Fireball/FireballController.tscn" id="3_s0ivj"]
-[ext_resource type="PackedScene" uid="uid://c0wdp6y0q30f7" path="res://Weapons/Bomb/BombController.tscn" id="5_3ugr0"]
-[ext_resource type="PackedScene" uid="uid://bepanmcskuu0s" path="res://Weapons/Lightning/LightningController.tscn" id="5_h6yyc"]
+[ext_resource type="PackedScene" uid="uid://bpyjoyi1y4tbu" path="res://Weapons/Fireball/FireballController.tscn" id="3_kt2s0"]
+[ext_resource type="PackedScene" uid="uid://dmmklf73csdn7" path="res://Weapons/AreaController.tscn" id="4_drd5a"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i80ac"]
 radius = 20.0
@@ -22,8 +21,6 @@ shape = SubResource("CircleShape2D_i80ac")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 
-[node name="BombController" parent="." instance=ExtResource("5_3ugr0")]
+[node name="FireballController" parent="." instance=ExtResource("3_kt2s0")]
 
-[node name="FireballController" parent="." instance=ExtResource("3_s0ivj")]
-
-[node name="LightningController" parent="." instance=ExtResource("5_h6yyc")]
+[node name="AreaController" parent="." instance=ExtResource("4_drd5a")]

@@ -21,7 +21,7 @@ func _get_random_enemy():
 	}
 
 func _on_spawn_timer_timeout():
-	for i in range(3):
+	for i in range(1):
 		var selected_enemy = _get_random_enemy()
 		if selected_enemy.enemy:
 			var lightning_instance = lightning_scene.instantiate()
