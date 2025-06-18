@@ -1,5 +1,7 @@
 extends Node2D
 
+var exp_value = 1
+
 var speed = 80
 var player
 
@@ -27,12 +29,13 @@ func pushNearbyEnemies(delta):
 				enemy.position += direction * enemy.speed * delta
 
 func updateSpatialGroup():
-	# FIXME: dunno
+	# FIXME: dunno.
+	# Despawn enemy if it goes too far from player
 	if global_position.x <= max(0, player.global_position.x - 800) or \
 	global_position.x >= min(get_parent().MAP_WIDTH, player.global_position.x + 800) or \
 	global_position.y <= max(0, player.global_position.y - 650) or \
 	global_position.y >= min(get_parent().MAP_HEIGHT, player.global_position.y + 650):
-		die()
+		die(false)
 		return
 
 	var new_spatial_group = get_parent().getSpatialGroup(position.x, position.y)
@@ -44,6 +47,9 @@ func updateSpatialGroup():
 		spatial_group = new_spatial_group
 		get_parent().enemies_spatial_groups[spatial_group].append(self)
 
-func die():
+func die(give_exp: bool = true):
+	if give_exp:
+		player.get_exp(exp_value)
+
 	get_parent().enemies_spatial_groups[spatial_group].erase(self)
 	queue_free()

@@ -8,7 +8,7 @@ var speed = 200
 
 var spatial_group = -1
 
-var range = 30
+var aoe_range = 30
 
 var bounce_count = 0
 var has_explosion = false
@@ -18,7 +18,7 @@ func _ready():
 	updateSpatialGroup()
 	$CPUParticles2D.emission_sphere_radius *= 1 + bonus_aoe
 	$CPUParticles2D.scale_amount_min *= 1 + bonus_aoe
-	range += 1 + bonus_aoe
+	aoe_range += 1 + bonus_aoe
 
 func _process(delta):
 	position = position + direction * speed * delta
@@ -26,7 +26,7 @@ func _process(delta):
 	checkCollisions()
 
 func checkCollisions():
-	var nearby_spatial_groups = get_parent().getExpandedSpatialGroups(spatial_group, ceil(range/50))
+	var nearby_spatial_groups = get_parent().getExpandedSpatialGroups(spatial_group, ceil(aoe_range/50))
 	var nearby_enemies = []
 	for group in nearby_spatial_groups:
 		nearby_enemies.append_array(get_parent().enemies_spatial_groups[group])
@@ -34,7 +34,7 @@ func checkCollisions():
 	for enemy in nearby_enemies:
 		if is_instance_valid(enemy):
 			var distance = (enemy.position - position).length()
-			if distance < range:
+			if distance < aoe_range:
 				enemy.die()
 				if has_explosion: explode()
 				if bounce_count > 0: bounce()

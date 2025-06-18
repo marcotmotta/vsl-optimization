@@ -17,7 +17,7 @@ var bullet_spatial_groups = []
 var player
 
 # waves params
-var WaveParams: WaveData = load("res://wave_data.tres")
+var WaveParams = WaveData.new()
 var current_level = 1
 var current_wave
 
@@ -33,7 +33,7 @@ func _ready():
 		enemies_spatial_groups.append([])
 		bullet_spatial_groups.append([])
 
-func _process(delta):
+func _process(_delta):
 	#print('FPS ', str(Engine.get_frames_per_second()))
 	#print('enemies', ' ', get_tree().get_nodes_in_group('enemy').size())
 	#print('ALL ', get_tree().get_node_count())
@@ -72,7 +72,6 @@ func _on_spawn_timer_timeout():
 
 	# level limit
 	# spawn 1 enemy if pool is full
-	#print(current_enemies, current_enemies >= current_wave.min_enemies)
 	if current_enemies >= current_wave.min_enemies:
 		while(true):
 			# choose spawn point
@@ -93,6 +92,14 @@ func _on_spawn_timer_timeout():
 					enemy_instance.global_position = spawn_point
 					add_child(enemy_instance)
 					break
+
+func go_to_next_level():
+	current_level += 1
+
+	# Check if there are more waves.
+	# This is basically a debug check.
+	if current_level < WaveParams.waves.size():
+		current_wave = WaveParams.waves[current_level]
 
 # debug
 func _input(event: InputEvent) -> void:

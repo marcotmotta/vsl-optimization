@@ -18,5 +18,8 @@ class_name WaveData # Makes this a global type
 	},
 	5: {
 		'min_enemies': 30
+	},
+	6: {
+		'min_enemies': 35
 	}
 }

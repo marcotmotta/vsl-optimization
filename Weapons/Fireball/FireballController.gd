@@ -10,7 +10,6 @@ func _ready():
 	upgrades = get_parent().current_abilities["Fireball"].upgrades
 
 func _get_closest_enemy():
-	var enemies = get_tree().get_nodes_in_group("enemy")
 	var selected_enemy = null
 	var selected_enemy_direction = Vector2.ZERO
 	var selected_enemy_distance = Vector2.ZERO

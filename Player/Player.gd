@@ -50,7 +50,7 @@ var spatial_group = 0
 
 var speed = 300
 
-func move(delta):
+func move(_delta):
 	var input_direction = Input.get_vector("a", "d", "w", "s").normalized()
 
 	velocity = input_direction * speed
@@ -81,8 +81,8 @@ func unlock_base(ability):
 
 func add_upgrade(ability, upgrade):
 	if ability.name in current_abilities:
-		var current_level = current_abilities[ability.name]["upgrades"].get(upgrade.name, 0)
-		current_abilities[ability.name]["upgrades"][upgrade.name] = current_level + 1
+		var current_upgrade_level = current_abilities[ability.name]["upgrades"].get(upgrade.name, 0)
+		current_abilities[ability.name]["upgrades"][upgrade.name] = current_upgrade_level + 1
 
 	end_upgrade_logic()
 # }}}
@@ -100,8 +100,8 @@ func get_upgrade_choices(num_choices = 3):
 	for ability in abilities:
 		if has_base(ability.name):
 			for upgrade in ability.upgrades:
-				var current_level = get_upgrade_level(ability.name, upgrade.name)
-				if current_level < upgrade.max_level:
+				var current_upgrade_level = get_upgrade_level(ability.name, upgrade.name)
+				if current_upgrade_level < upgrade.max_level:
 					pool.append({"type": "upgrade", "ability": ability, "upgrade": upgrade})
 
 	pool.shuffle()
@@ -118,6 +118,7 @@ func set_upgrade_buttons(upgrade_choices):
 
 		upgrade_button.text = upgrade_choices[i].name
 		upgrade_button.pressed.connect(upgrade_choices[i].callable)
+		upgrade_button.visible = true
 
 	$CanvasLayer/UpgradeButtons.visible = true
 	get_tree().paused = true
@@ -129,11 +130,14 @@ func end_upgrade_logic():
 	for upgrade_button in upgrade_buttons:
 		for connection in upgrade_button.pressed.get_connections():
 			upgrade_button.pressed.disconnect(connection.callable)
+			upgrade_button.visible = false
 
 	$CanvasLayer/UpgradeButtons.visible = false
 	get_tree().paused = false
 
 func level_up():
+	current_level += 1
+
 	var upgrade_choices = []
 	var choices = get_upgrade_choices() # Get new upgrade choices
 
@@ -155,11 +159,20 @@ func level_up():
 
 	else: # Already got all upgrades
 		pass
+
+func get_exp(amount: int):
+	# Needed exp for level up formula
+	var needed_exp = 5 + current_level * 3
+
+	current_exp = min(current_exp + amount, needed_exp)
+
+	if current_exp >= needed_exp:
+		current_exp = 0
+		level_up()
 # }}}
 
 # debug
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("f2"):
-		print(current_abilities)
 		# placeholder for the player choosing an upgrade
 		level_up()
