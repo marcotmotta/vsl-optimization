@@ -3,8 +3,11 @@ extends Node2D
 var bomb_scene = preload("res://Weapons/Bomb/Bomb.tscn")
 var map
 
+var upgrades
+
 func _ready():
 	map = get_parent().get_parent()
+	upgrades = get_parent().current_abilities["Poison"].upgrades
 
 func _get_random_enemy():
 	var enemies = get_tree().get_nodes_in_group("enemy")
@@ -21,7 +24,7 @@ func _get_random_enemy():
 	}
 
 func _on_spawn_timer_timeout():
-	for i in range(1):
+	for i in range(upgrades.get("count", 0) + 1):
 		var selected_enemy = _get_random_enemy()
 		if selected_enemy.enemy:
 			var bomb_instance = bomb_scene.instantiate()

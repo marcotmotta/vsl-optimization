@@ -1,5 +1,51 @@
 extends CharacterBody2D
 
+# Abilities
+var abilities = [
+	{
+		"name": "Fireball",
+		"controller": preload("res://Weapons/Fireball/FireballController.tscn"),
+		"upgrades": [
+			{
+				"name": "count",
+				"max_level": 2
+			}
+		]
+	},
+	{
+		"name": "Lightning",
+		"controller": preload("res://Weapons/Lightning/LightningController.tscn"),
+		"upgrades": [
+			{
+				"name": "count",
+				"max_level": 2
+			}
+		]
+	},
+	{
+		"name": "Poison",
+		"controller": preload("res://Weapons/Bomb/BombController.tscn"),
+		"upgrades": [
+			{
+				"name": "count",
+				"max_level": 2
+			}
+		]
+	},
+	{
+		"name": "Area",
+		"controller": preload("res://Weapons/AreaController.tscn"),
+		"upgrades": {}
+	}
+]
+
+# {"Fireball": {"unlocked": true, "upgrades": {"count": 2, "damage": 1}}}
+var current_abilities = {}
+
+# Level params
+var current_level = 1
+var current_exp = 0
+
 var spatial_group = 0
 
 var speed = 300
@@ -11,5 +57,109 @@ func move(delta):
 	move_and_slide()
 
 func _process(delta):
+	# UI
+	$CanvasLayer/LevelLabel.text = str(current_level)
+
+	# Movement
 	move(delta)
 	spatial_group = get_parent().getSpatialGroup(position.x, position.y)
+
+# Abilties utils {{{
+func has_base(ability_name):
+	return current_abilities.get(ability_name, {}).get("unlocked", false)
+
+func get_upgrade_level(ability_name, upgrade_name):
+	return current_abilities.get(ability_name, {}).get("upgrades", {}).get(upgrade_name, 0)
+
+func unlock_base(ability):
+	current_abilities.get_or_add(ability.name, {"unlocked": true, "upgrades": {}})
+
+	var ability_controller_instance = ability.controller.instantiate()
+	add_child(ability_controller_instance)
+	
+	end_upgrade_logic()
+
+func add_upgrade(ability, upgrade):
+	if ability.name in current_abilities:
+		var current_level = current_abilities[ability.name]["upgrades"].get(upgrade.name, 0)
+		current_abilities[ability.name]["upgrades"][upgrade.name] = current_level + 1
+
+	end_upgrade_logic()
+# }}}
+
+# Level up {{{
+func get_upgrade_choices(num_choices = 3):
+	var pool = []
+
+	# Base abilities:
+	for ability in abilities:
+		if not has_base(ability.name):
+			pool.append({"type": "base", "ability": ability})
+
+	# Upgrades:
+	for ability in abilities:
+		if has_base(ability.name):
+			for upgrade in ability.upgrades:
+				var current_level = get_upgrade_level(ability.name, upgrade.name)
+				if current_level < upgrade.max_level:
+					pool.append({"type": "upgrade", "ability": ability, "upgrade": upgrade})
+
+	pool.shuffle()
+	var selected = []
+
+	for i in range(min(len(pool), num_choices)):
+		selected.append(pool.pop_back())
+
+	return selected
+
+func set_upgrade_buttons(upgrade_choices):
+	for i in upgrade_choices.size():
+		var upgrade_button = $CanvasLayer/UpgradeButtons/VBoxContainer.get_child(i)
+
+		upgrade_button.text = upgrade_choices[i].name
+		upgrade_button.pressed.connect(upgrade_choices[i].callable)
+
+	$CanvasLayer/UpgradeButtons.visible = true
+	get_tree().paused = true
+
+# This cleans the buttons signals after the player selects an upgrade
+func end_upgrade_logic():
+	var upgrade_buttons = $CanvasLayer/UpgradeButtons/VBoxContainer.get_children()
+
+	for upgrade_button in upgrade_buttons:
+		for connection in upgrade_button.pressed.get_connections():
+			upgrade_button.pressed.disconnect(connection.callable)
+
+	$CanvasLayer/UpgradeButtons.visible = false
+	get_tree().paused = false
+
+func level_up():
+	var upgrade_choices = []
+	var choices = get_upgrade_choices() # Get new upgrade choices
+
+	if choices: # There are available upgrades on the pool
+		for choice in choices:
+			var upgrade_info = {}
+
+			if choice.type == "base":
+				upgrade_info.name = choice.ability.name
+				upgrade_info.callable = Callable(self, "unlock_base").bind(choice.ability)
+
+			else:
+				upgrade_info.name = choice.ability.name + choice.upgrade.name
+				upgrade_info.callable = Callable(self, "add_upgrade").bind(choice.ability, choice.upgrade)
+
+			upgrade_choices.append(upgrade_info)
+
+		set_upgrade_buttons(upgrade_choices)
+
+	else: # Already got all upgrades
+		pass
+# }}}
+
+# debug
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("f2"):
+		print(current_abilities)
+		# placeholder for the player choosing an upgrade
+		level_up()

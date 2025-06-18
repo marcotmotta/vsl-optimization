@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dnd2ggwerwuox"]
 
-[ext_resource type="Script" path="res://Weapons/Bomb/Bomb.gd" id="1_flskn"]
+[ext_resource type="Script" uid="uid://qtu2uukqp8sg" path="res://Weapons/Bomb/Bomb.gd" id="1_flskn"]
 [ext_resource type="Texture2D" uid="uid://btptpg4ixhlfu" path="res://Assets/poison_potion.png" id="2_7pqe3"]
 
 [sub_resource type="Animation" id="Animation_i0swc"]
@@ -52,9 +52,9 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_pygp1"]
 _data = {
-"1": SubResource("Animation_i0swc"),
-"2": SubResource("Animation_57u3j"),
-"RESET": SubResource("Animation_ioi21")
+&"1": SubResource("Animation_i0swc"),
+&"2": SubResource("Animation_57u3j"),
+&"RESET": SubResource("Animation_ioi21")
 }
 
 [node name="Bomb" type="Node2D"]
@@ -66,6 +66,6 @@ texture = ExtResource("2_7pqe3")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_pygp1")
+&"": SubResource("AnimationLibrary_pygp1")
 }
 autoplay = "1"

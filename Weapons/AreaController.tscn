@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dmmklf73csdn7"]
 
-[ext_resource type="Script" path="res://Weapons/AreaController.gd" id="1_7paa8"]
+[ext_resource type="Script" uid="uid://bbhp63qr6q7jx" path="res://Weapons/AreaController.gd" id="1_7paa8"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_3rkmw"]
 radius = 100.0

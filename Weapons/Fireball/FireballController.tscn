@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bpyjoyi1y4tbu"]
 
-[ext_resource type="Script" path="res://Weapons/Fireball/FireballController.gd" id="1_hg7vg"]
+[ext_resource type="Script" uid="uid://clr0sqk6emmn3" path="res://Weapons/Fireball/FireballController.gd" id="1_hg7vg"]
 
 [node name="FireballController" type="Node2D"]
 script = ExtResource("1_hg7vg")

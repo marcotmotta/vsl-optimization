@@ -26,7 +26,7 @@ func _process(delta):
 	checkCollisions()
 
 func checkCollisions():
-	var nearby_spatial_groups = get_parent().getExpandedSpatialGroups(spatial_group, 1)
+	var nearby_spatial_groups = get_parent().getExpandedSpatialGroups(spatial_group, ceil(range/50))
 	var nearby_enemies = []
 	for group in nearby_spatial_groups:
 		nearby_enemies.append_array(get_parent().enemies_spatial_groups[group])

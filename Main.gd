@@ -16,14 +16,17 @@ var bullet_spatial_groups = []
 
 var player
 
-# level params
-const MAX_ENEMIES = 200
-var current_max_enemies = 10
+# waves params
+var WaveParams: WaveData = load("res://wave_data.tres")
+var current_level = 1
+var current_wave
 
 func _ready():
 	randomize()
-	
+
 	player = get_node("Player")
+
+	current_wave = WaveParams.waves[current_level]
 
 	# create spatial groups
 	for i in range(TOTAL_CELLS):
@@ -65,28 +68,34 @@ func _on_spawn_timer_timeout():
 
 	# hard limit
 	# does not spawn any enemies if limit reached
-	if current_enemies >= MAX_ENEMIES: return
+	if current_enemies >= WaveParams.MAX_ENEMIES: return
 
 	# level limit
 	# spawn 1 enemy if pool is full
-	print(current_enemies, current_enemies >= current_max_enemies)
-	if current_enemies >= current_max_enemies:
+	#print(current_enemies, current_enemies >= current_wave.min_enemies)
+	if current_enemies >= current_wave.min_enemies:
 		while(true):
 			# choose spawn point
 			var spawn_point = Vector2(randi_range(player.global_position.x - 750, player.global_position.x + 750), randi_range(player.global_position.y - 600, player.global_position.y + 600))
-			if ((spawn_point - player.global_position).length() > 500) and spawn_point.x > 0 and spawn_point.x < MAP_WIDTH and spawn_point.y > 0 and spawn_point.y < MAP_HEIGHT:
+			if ((spawn_point - player.global_position).length() > 550) and spawn_point.x > 0 and spawn_point.x < MAP_WIDTH and spawn_point.y > 0 and spawn_point.y < MAP_HEIGHT:
 				var enemy_instance = enemy_scene.instantiate()
 				enemy_instance.global_position = spawn_point
 				add_child(enemy_instance)
 				break
 	else:
-		var available_slots = current_max_enemies - current_enemies
+		var available_slots = current_wave.min_enemies - current_enemies
 		for i in range(available_slots):
 			while(true):
 				# choose spawn point
 				var spawn_point = Vector2(randi_range(player.global_position.x - 750, player.global_position.x + 750), randi_range(player.global_position.y - 600, player.global_position.y + 600))
-				if ((spawn_point - player.global_position).length() > 500) and spawn_point.x > 0 and spawn_point.x < MAP_WIDTH and spawn_point.y > 0 and spawn_point.y < MAP_HEIGHT:
+				if ((spawn_point - player.global_position).length() > 550) and spawn_point.x > 0 and spawn_point.x < MAP_WIDTH and spawn_point.y > 0 and spawn_point.y < MAP_HEIGHT:
 					var enemy_instance = enemy_scene.instantiate()
 					enemy_instance.global_position = spawn_point
 					add_child(enemy_instance)
 					break
+
+# debug
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("f1"):
+		current_level += 1
+		current_wave = WaveParams.waves[current_level]

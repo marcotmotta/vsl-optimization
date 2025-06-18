@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bw2i8e67rp11k"]
 
-[ext_resource type="Script" path="res://Weapons/Poison/Poison.gd" id="1_t2kqm"]
+[ext_resource type="Script" uid="uid://d3q4soo3s5ar6" path="res://Weapons/Poison/Poison.gd" id="1_t2kqm"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_61g1p"]
 radius = 50.0

@@ -16,7 +16,7 @@ func _process(delta):
 	var invert = -1 if direction.x > 0 else 1
 
 	$Sprite2D.position = _quadratic_bezier(Vector2.ZERO, ((p2 - position) / 2).rotated(deg_to_rad(45 * invert)), p2 - position, time)
-	time += delta / 1.5
+	time += delta / 1.2 # This is the time the poison takes to get to the target point
 	if time > 1:
 		var poison_instance = poison_scene.instantiate()
 		poison_instance.global_position = $Sprite2D.global_position

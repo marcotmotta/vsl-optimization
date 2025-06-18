@@ -3,8 +3,11 @@ extends Node2D
 var fireball_scene = preload("Fireball.tscn")
 var map
 
+var upgrades
+
 func _ready():
 	map = get_parent().get_parent()
+	upgrades = get_parent().current_abilities["Fireball"].upgrades
 
 func _get_closest_enemy():
 	var enemies = get_tree().get_nodes_in_group("enemy")
@@ -26,7 +29,7 @@ func _get_closest_enemy():
 func _on_spawn_timer_timeout():
 	var selected_enemy = _get_closest_enemy()
 	if selected_enemy.enemy:
-		for i in range(1):
+		for i in range(upgrades.get("count", 0) + 1):
 			var shift = 0 if i == 0 else randi_range(-25, 25)
 			var fireball_instance = fireball_scene.instantiate()
 			fireball_instance.fireball_scene = fireball_scene
