@@ -1,14 +1,57 @@
-[gd_scene load_steps=3 format=3 uid="uid://dmmklf73csdn7"]
+[gd_scene load_steps=8 format=3 uid="uid://dmmklf73csdn7"]
 
 [ext_resource type="Script" uid="uid://bbhp63qr6q7jx" path="res://Weapons/AreaController.gd" id="1_7paa8"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_3rkmw"]
-radius = 100.0
-height = 200.0
+radius = 80.0
+height = 160.0
+
+[sub_resource type="Gradient" id="Gradient_hxudq"]
+offsets = PackedFloat32Array(0, 0.542936)
+colors = PackedColorArray(0.302081, 0.00114715, 0.598165, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_jtvkj"]
+gradient = SubResource("Gradient_hxudq")
+
+[sub_resource type="Curve" id="Curve_wmevf"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_owigx"]
+curve = SubResource("Curve_wmevf")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3gwlh"]
+particle_flag_disable_z = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 0.0
+emission_ring_radius = 80.0
+emission_ring_inner_radius = 80.0
+emission_ring_cone_angle = 90.0
+spread = 0.0
+radial_velocity_min = -100.0
+radial_velocity_max = -2.23517e-05
+gravity = Vector3(0, 0, 0)
+scale_min = 3.0
+scale_max = 3.0
+scale_curve = SubResource("CurveTexture_owigx")
+color_ramp = SubResource("GradientTexture1D_jtvkj")
 
 [node name="AreaController" type="Node2D"]
 script = ExtResource("1_7paa8")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+visible = false
 modulate = Color(1, 0.553184, 0.63062, 0.196078)
 mesh = SubResource("SphereMesh_3rkmw")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+amount = 500
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_3gwlh")
+
+[node name="HitTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]

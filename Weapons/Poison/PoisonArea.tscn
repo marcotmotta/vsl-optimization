@@ -1,20 +1,20 @@
 [gd_scene load_steps=3 format=3 uid="uid://bw2i8e67rp11k"]
 
-[ext_resource type="Script" path="res://Weapons/Poison/Poison.gd" id="1_t2kqm"]
+[ext_resource type="Script" uid="uid://d3q4soo3s5ar6" path="res://Weapons/Poison/PoisonArea.gd" id="1_8wwk0"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_61g1p"]
 radius = 50.0
 height = 100.0
 
-[node name="Poison" type="Node2D"]
-script = ExtResource("1_t2kqm")
+[node name="PoisonArea" type="Node2D"]
+script = ExtResource("1_8wwk0")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 modulate = Color(0.0666666, 1, 0, 0.196078)
 mesh = SubResource("SphereMesh_61g1p")
 
 [node name="HitTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.25
 autostart = true
 
 [node name="ExpirationTimer" type="Timer" parent="."]

@@ -1,6 +1,6 @@
 extends Node2D
 
-var bomb_scene = preload("res://Weapons/Bomb/Bomb.tscn")
+var poison_scene = preload("res://Weapons/Poison/Poison.tscn")
 var map
 
 var upgrades
@@ -27,11 +27,11 @@ func _on_spawn_timer_timeout():
 	for i in range(upgrades.get("count", 0) + 1):
 		var selected_enemy = _get_random_enemy()
 		if selected_enemy.enemy:
-			var bomb_instance = bomb_scene.instantiate()
-			bomb_instance.p2 = ((selected_enemy.enemy.global_position - global_position) / 1.7) + global_position
-			bomb_instance.global_position = global_position
-			bomb_instance.direction = selected_enemy.direction
-			#bomb_instance.bounce_count = 2
-			#bomb_instance.has_explosion = true
-			#bomb_instance.bonus_aoe = 1
-			map.add_child(bomb_instance)
+			var poison_instance = poison_scene.instantiate()
+			poison_instance.p2 = ((selected_enemy.enemy.global_position - global_position) / 1.7) + global_position
+			poison_instance.global_position = global_position
+			poison_instance.direction = selected_enemy.direction
+			#poison_instance.bounce_count = 2
+			#poison_instance.has_explosion = true
+			#poison_instance.bonus_aoe = 1
+			map.add_child(poison_instance)

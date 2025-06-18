@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://c0wdp6y0q30f7"]
 
-[ext_resource type="Script" uid="uid://c8dmx62qpjjx5" path="res://Weapons/Bomb/BombController.gd" id="1_dnedm"]
+[ext_resource type="Script" uid="uid://c8dmx62qpjjx5" path="res://Weapons/Poison/PoisonController.gd" id="1_dnedm"]
 
-[node name="BombController" type="Node2D"]
+[node name="PoisonController" type="Node2D"]
 script = ExtResource("1_dnedm")
 
 [node name="SpawnTimer" type="Timer" parent="."]

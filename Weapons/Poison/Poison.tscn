@@ -1,26 +1,71 @@
-[gd_scene load_steps=3 format=3 uid="uid://bw2i8e67rp11k"]
+[gd_scene load_steps=7 format=3 uid="uid://dnd2ggwerwuox"]
 
-[ext_resource type="Script" uid="uid://d3q4soo3s5ar6" path="res://Weapons/Poison/Poison.gd" id="1_t2kqm"]
+[ext_resource type="Script" uid="uid://qtu2uukqp8sg" path="res://Weapons/Poison/Poison.gd" id="1_flskn"]
+[ext_resource type="Texture2D" uid="uid://btptpg4ixhlfu" path="res://Assets/poison_potion.png" id="2_7pqe3"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_61g1p"]
-radius = 50.0
-height = 100.0
+[sub_resource type="Animation" id="Animation_i0swc"]
+resource_name = "1"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
+[sub_resource type="Animation" id="Animation_57u3j"]
+resource_name = "2"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, -6.28319]
+}
+
+[sub_resource type="Animation" id="Animation_ioi21"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pygp1"]
+_data = {
+&"1": SubResource("Animation_i0swc"),
+&"2": SubResource("Animation_57u3j"),
+&"RESET": SubResource("Animation_ioi21")
+}
 
 [node name="Poison" type="Node2D"]
-script = ExtResource("1_t2kqm")
+script = ExtResource("1_flskn")
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
-modulate = Color(0.0666666, 1, 0, 0.196078)
-mesh = SubResource("SphereMesh_61g1p")
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(2, 2)
+texture = ExtResource("2_7pqe3")
 
-[node name="HitTimer" type="Timer" parent="."]
-wait_time = 0.25
-autostart = true
-
-[node name="ExpirationTimer" type="Timer" parent="."]
-wait_time = 1.5
-one_shot = true
-autostart = true
-
-[connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
-[connection signal="timeout" from="ExpirationTimer" to="." method="_on_expiration_timer_timeout"]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_pygp1")
+}
+autoplay = "1"

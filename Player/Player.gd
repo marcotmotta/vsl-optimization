@@ -24,7 +24,7 @@ var abilities = [
 	},
 	{
 		"name": "Poison",
-		"controller": preload("res://Weapons/Bomb/BombController.tscn"),
+		"controller": preload("res://Weapons/Poison/PoisonController.tscn"),
 		"upgrades": [
 			{
 				"name": "count",
@@ -35,7 +35,12 @@ var abilities = [
 	{
 		"name": "Area",
 		"controller": preload("res://Weapons/AreaController.tscn"),
-		"upgrades": {}
+		"upgrades": [
+			{
+				"name": "area",
+				"max_level": 2
+			}
+		]
 	}
 ]
 
