@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://v8jcwfs50i1m"]
+
+[ext_resource type="Script" uid="uid://dkh1urxgj1dmd" path="res://Enemies/Enemy1/Enemy1.gd" id="1_ek32b"]
+[ext_resource type="Texture2D" uid="uid://b1j63r7erdkpy" path="res://icon.svg" id="2_upgl4"]
+
+[node name="Enemy1" type="Node2D" groups=["enemy"]]
+script = ExtResource("1_ek32b")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_upgl4")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_top = 18.0
+offset_right = 25.0
+offset_bottom = 22.0
+grow_horizontal = 2
+value = 50.0
+show_percentage = false

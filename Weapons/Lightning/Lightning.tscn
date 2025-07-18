@@ -33,7 +33,7 @@ offset_bottom = 175.0
 pivot_offset = Vector2(0, 175)
 
 [node name="ExpirationTimer" type="Timer" parent="."]
-wait_time = 0.8
+wait_time = 0.6
 autostart = true
 
 [node name="DamageTimer" type="Timer" parent="."]

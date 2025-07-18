@@ -8,8 +8,8 @@ var speed = 200
 
 var spatial_group = -1
 
+var damage
 var aoe_range = 30
-
 var bounce_count = 0
 var has_explosion = false
 var bonus_aoe = 0 # percentage?
@@ -35,7 +35,8 @@ func checkCollisions():
 		if is_instance_valid(enemy):
 			var distance = (enemy.position - position).length()
 			if distance < aoe_range:
-				enemy.die()
+				print(damage, enemy.health)
+				enemy.take_damage(damage)
 				if has_explosion: explode()
 				if bounce_count > 0: bounce()
 				die()
@@ -83,6 +84,7 @@ func bounce():
 func explode():
 	var explosion_instance = explosion_scene.instantiate()
 	explosion_instance.global_position = global_position
+	explosion_instance.damage = damage
 	get_parent().add_child(explosion_instance)
 
 func die():

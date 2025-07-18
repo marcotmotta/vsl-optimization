@@ -1,22 +1,42 @@
 extends Node2D
 
-var exp_value = 1
+var exp_value: int
+var max_health: int
+var health: int
+var speed: int
+var damage: int
+var health_modifier: float
 
-var speed = 80
 var player
+var health_bar
 
 var spatial_group = -1
 
 var size = 13
 
+var damage_number_scene = preload("res://DamageNumber/DamageNumber.tscn")
+
 func _ready():
 	randomize()
 	player = get_parent().get_node('Player')
+	health_bar = get_node("HealthBar")
+
+	set_props()
+	
+	max_health *= 1 + health_modifier
+
+	health = max_health
+
+func set_props() -> void: # This will be called by the children classes
+	pass
 
 func _process(delta):
 	position += (player.global_position - global_position).normalized() * speed * delta
 	updateSpatialGroup()
 	pushNearbyEnemies(delta)
+
+	health_bar.max_value = max_health
+	health_bar.value = health
 
 func pushNearbyEnemies(delta):
 	var nearby_enemies = get_parent().enemies_spatial_groups[spatial_group]
@@ -46,6 +66,17 @@ func updateSpatialGroup():
 		get_parent().enemies_spatial_groups[spatial_group].erase(self)
 		spatial_group = new_spatial_group
 		get_parent().enemies_spatial_groups[spatial_group].append(self)
+
+func take_damage(amount: int):
+	var damage_number_instance = damage_number_scene.instantiate()
+	damage_number_instance.global_position = global_position
+	damage_number_instance.value = amount
+	get_parent().add_child(damage_number_instance)
+
+	health = max(health - amount, 0)
+
+	if health <= 0:
+		die(true)
 
 func die(give_exp: bool = true):
 	if give_exp:

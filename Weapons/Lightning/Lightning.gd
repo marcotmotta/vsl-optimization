@@ -2,6 +2,7 @@ extends Node2D
 
 var direction
 
+var damage
 var length = 350
 var aoe_range = 30
 
@@ -25,7 +26,7 @@ func checkCollisions():
 
 	for enemy in nearby_enemies:
 		if is_instance_valid(enemy):
-			enemy.die()
+			enemy.take_damage(damage)
 
 func _on_expiration_timer_timeout():
 	queue_free()

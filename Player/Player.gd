@@ -4,41 +4,101 @@ extends CharacterBody2D
 var abilities = [
 	{
 		"name": "Fireball",
+		"rarity": 8, # Higher value = more common. Values: 8, 5, 3, 2, 1
 		"controller": preload("res://Weapons/Fireball/FireballController.tscn"),
 		"upgrades": [
 			{
 				"name": "count",
-				"max_level": 2
+				"max_level": 2,
+				"rarity": 8,
+			},
+			{
+				"name": "damage",
+				"max_level": 2,
+				"rarity": 8,
 			}
 		]
 	},
 	{
 		"name": "Lightning",
+		"rarity": 8,
 		"controller": preload("res://Weapons/Lightning/LightningController.tscn"),
 		"upgrades": [
 			{
 				"name": "count",
-				"max_level": 2
+				"max_level": 2,
+				"rarity": 8,
+			},
+			{
+				"name": "damage",
+				"max_level": 2,
+				"rarity": 8,
 			}
 		]
 	},
 	{
 		"name": "Poison",
+		"rarity": 8,
 		"controller": preload("res://Weapons/Poison/PoisonController.tscn"),
 		"upgrades": [
 			{
 				"name": "count",
-				"max_level": 2
+				"max_level": 2,
+				"rarity": 8,
+			},
+			{
+				"name": "area",
+				"max_level": 2,
+				"rarity": 8,
+			},
+			{
+				"name": "duration",
+				"max_level": 2,
+				"rarity": 8,
+			},
+			{
+				"name": "damage",
+				"max_level": 2,
+				"rarity": 8,
 			}
 		]
 	},
 	{
 		"name": "Area",
+		"rarity": 8,
 		"controller": preload("res://Weapons/AreaController.tscn"),
 		"upgrades": [
 			{
 				"name": "area",
-				"max_level": 2
+				"max_level": 2,
+				"rarity": 8,
+			},
+			{
+				"name": "damage",
+				"max_level": 2,
+				"rarity": 8,
+			}
+		]
+	},
+	{
+		"name": "Rang",
+		"rarity": 8,
+		"controller": preload("res://Weapons/Rang/RangController.tscn"),
+		"upgrades": [
+			{
+				"name": "count",
+				"max_level": 2,
+				"rarity": 8,
+			},
+			{
+				"name": "range",
+				"max_level": 2,
+				"rarity": 8,
+			},
+			{
+				"name": "damage",
+				"max_level": 2,
+				"rarity": 8,
 			}
 		]
 	}
@@ -53,7 +113,7 @@ var current_exp = 0
 
 var spatial_group = 0
 
-var speed = 300
+var speed = 100
 
 func move(_delta):
 	var input_direction = Input.get_vector("a", "d", "w", "s").normalized()
@@ -63,7 +123,8 @@ func move(_delta):
 
 func _process(delta):
 	# UI
-	$CanvasLayer/LevelLabel.text = str(current_level)
+	$CanvasLayer/LevelLabel.text = 'current level: ' + str(current_level) +\
+	'\ncurrent cycle: ' + str(get_parent().current_cycle)
 
 	# Movement
 	move(delta)
@@ -95,11 +156,13 @@ func add_upgrade(ability, upgrade):
 # Level up {{{
 func get_upgrade_choices(num_choices = 3):
 	var pool = []
+	var weights = []
 
 	# Base abilities:
 	for ability in abilities:
 		if not has_base(ability.name):
 			pool.append({"type": "base", "ability": ability})
+			weights.append(ability.rarity)
 
 	# Upgrades:
 	for ability in abilities:
@@ -108,14 +171,40 @@ func get_upgrade_choices(num_choices = 3):
 				var current_upgrade_level = get_upgrade_level(ability.name, upgrade.name)
 				if current_upgrade_level < upgrade.max_level:
 					pool.append({"type": "upgrade", "ability": ability, "upgrade": upgrade})
+					weights.append(upgrade.rarity)
 
-	pool.shuffle()
+	if pool.size() == 0:
+		return []
+
+	# Select unique items based on weights
 	var selected = []
+	var temp_pool = pool.duplicate()
+	var temp_weights = weights.duplicate()
 
-	for i in range(min(len(pool), num_choices)):
-		selected.append(pool.pop_back())
+	for i in range(min(num_choices, temp_pool.size())):
+		var index = weighted_random_index(temp_weights)
+		selected.append(temp_pool[index])
+		temp_pool.remove_at(index)
+		temp_weights.remove_at(index)
 
 	return selected
+
+# This is similar to the choices function in python.
+# I dont fully understand this, but it chooses indexes based on weight values.
+func weighted_random_index(weights: Array) -> int:
+	var total_weight = 0
+	for w in weights:
+		total_weight += w
+
+	var r = randf() * total_weight
+	var cumulative = 0
+
+	for i in range(weights.size()):
+		cumulative += weights[i]
+		if r <= cumulative:
+			return i
+
+	return weights.size() - 1 # Fallback (should never happen)
 
 func set_upgrade_buttons(upgrade_choices):
 	for i in upgrade_choices.size():
@@ -142,6 +231,9 @@ func end_upgrade_logic():
 
 func level_up():
 	current_level += 1
+
+	if current_level % 5 == 0:
+		get_parent().go_to_next_level()
 
 	var upgrade_choices = []
 	var choices = get_upgrade_choices() # Get new upgrade choices

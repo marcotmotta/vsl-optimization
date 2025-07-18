@@ -1,5 +1,6 @@
 extends Node2D
 
+var damage = 20
 var base_aoe_range = 80
 
 var upgrades
@@ -10,8 +11,8 @@ func _ready() -> void:
 func checkCollisions():
 	var aoe_range = base_aoe_range + (upgrades.get("area", 0) * 10)
 
-	$GPUParticles2D.process_material.emission_ring_radius = aoe_range
-	$GPUParticles2D.process_material.emission_ring_inner_radius = aoe_range
+	$GPUParticles2D.process_material.emission_ring_radius = aoe_range - 10
+	$GPUParticles2D.process_material.emission_ring_inner_radius = aoe_range - 10
 
 	var spatial_group = get_parent().get_parent().getSpatialGroup(global_position.x, global_position.y)
 
@@ -24,7 +25,7 @@ func checkCollisions():
 		if is_instance_valid(enemy):
 			var distance = (enemy.global_position - global_position).length()
 			if distance < aoe_range:
-				enemy.die()
+				enemy.take_damage((damage * (upgrades.get("damage", 0) + 1)) * 0.25)
 
 func _on_hit_timer_timeout():
 	checkCollisions()

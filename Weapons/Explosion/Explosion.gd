@@ -1,5 +1,6 @@
 extends Node2D
 
+var damage
 var radius = 100
 
 func _ready():
@@ -16,7 +17,7 @@ func _ready():
 		if is_instance_valid(enemy):
 			var distance = (enemy.global_position - global_position).length()
 			if distance < radius:
-				enemy.die()
+				enemy.taka_damage(damage)
 
 func _on_cpu_particles_2d_finished():
 	queue_free()

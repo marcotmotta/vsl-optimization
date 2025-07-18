@@ -31,6 +31,7 @@ func _on_spawn_timer_timeout():
 			#lightning_instance.lightning_scene = lightning_scene
 			lightning_instance.global_position = global_position
 			lightning_instance.direction = selected_enemy.direction
+			lightning_instance.damage = 10 * (upgrades.get("damage", 0) + 1)
 			#lightning_instance.bounce_count = 2
 			#lightning_instance.has_explosion = true
 			#lightning_instance.bonus_aoe = 1

@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://bw2i8e67rp11k"]
+[gd_scene load_steps=9 format=3 uid="uid://bw2i8e67rp11k"]
 
 [ext_resource type="Script" uid="uid://d3q4soo3s5ar6" path="res://Weapons/Poison/PoisonArea.gd" id="1_8wwk0"]
 
@@ -6,10 +6,50 @@
 radius = 50.0
 height = 100.0
 
+[sub_resource type="Gradient" id="Gradient_wlvuf"]
+offsets = PackedFloat32Array(0, 0.540166)
+colors = PackedColorArray(0, 0.756863, 0.196078, 1, 1, 1, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_jtvkj"]
+gradient = SubResource("Gradient_wlvuf")
+
+[sub_resource type="Curve" id="Curve_ysr5p"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_owigx"]
+curve = SubResource("Curve_ysr5p")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7k6b6"]
+particle_flag_disable_z = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 0.0
+emission_ring_radius = 50.0
+emission_ring_inner_radius = 50.0
+emission_ring_cone_angle = 90.0
+spread = 0.0
+scale_min = 3.0
+scale_max = 4.0
+scale_curve = SubResource("CurveTexture_owigx")
+color_ramp = SubResource("GradientTexture1D_jtvkj")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_vdn5r"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 50.0
+spread = 0.0
+gravity = Vector3(0, -100, 0)
+scale_min = 3.0
+scale_max = 4.0
+scale_curve = SubResource("CurveTexture_owigx")
+color_ramp = SubResource("GradientTexture1D_jtvkj")
+
 [node name="PoisonArea" type="Node2D"]
 script = ExtResource("1_8wwk0")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+visible = false
 modulate = Color(0.0666666, 1, 0, 0.196078)
 mesh = SubResource("SphereMesh_61g1p")
 
@@ -19,8 +59,17 @@ autostart = true
 
 [node name="ExpirationTimer" type="Timer" parent="."]
 wait_time = 1.5
-one_shot = true
-autostart = true
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+amount = 100
+preprocess = 0.5
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_7k6b6")
+
+[node name="GPUParticles2D2" type="GPUParticles2D" parent="."]
+amount = 100
+local_coords = true
+process_material = SubResource("ParticleProcessMaterial_vdn5r")
 
 [connection signal="timeout" from="HitTimer" to="." method="_on_hit_timer_timeout"]
 [connection signal="timeout" from="ExpirationTimer" to="." method="_on_expiration_timer_timeout"]

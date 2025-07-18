@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://8dy4uqxvj06l"]
+[gd_scene load_steps=5 format=3 uid="uid://8dy4uqxvj06l"]
 
 [ext_resource type="Script" uid="uid://cdtro7w1ooiir" path="res://Player/Player.gd" id="1_4tjue"]
 [ext_resource type="Texture2D" uid="uid://b1j63r7erdkpy" path="res://icon.svg" id="1_8voul"]
+[ext_resource type="PackedScene" uid="uid://xhjjnr8nr7hd" path="res://Timer/Timer.tscn" id="3_tok1r"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i80ac"]
 radius = 20.0
@@ -63,3 +64,8 @@ text = "Option 3"
 offset_right = 40.0
 offset_bottom = 23.0
 text = "100"
+
+[node name="Timer" type="CanvasLayer" parent="."]
+
+[node name="Timer" parent="Timer" instance=ExtResource("3_tok1r")]
+position = Vector2(640, 690)

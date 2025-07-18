@@ -2,10 +2,14 @@ extends Node2D
 
 var poison_area_scene = preload("res://Weapons/Poison/PoisonArea.tscn")
 
-var p2
+var target_position
 var direction
 
 var time = 0
+
+var damage
+var aoe_range
+var duration
 
 func _ready():
 	randomize()
@@ -15,11 +19,14 @@ func _ready():
 func _process(delta):
 	var invert = -1 if direction.x > 0 else 1
 
-	$Sprite2D.position = _quadratic_bezier(Vector2.ZERO, ((p2 - position) / 2).rotated(deg_to_rad(45 * invert)), p2 - position, time)
+	$Sprite2D.position = _quadratic_bezier(Vector2.ZERO, ((target_position - position) / 2).rotated(deg_to_rad(45 * invert)), target_position - position, time)
 	time += delta / 1.2 # This is the time the poison takes to get to the target point
 	if time > 1:
 		var poison_area_instance = poison_area_scene.instantiate()
 		poison_area_instance.global_position = $Sprite2D.global_position
+		poison_area_instance.damage = damage
+		poison_area_instance.aoe_range = aoe_range
+		poison_area_instance.duration = duration
 		get_parent().add_child(poison_area_instance)
 		queue_free()
 
