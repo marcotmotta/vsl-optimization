@@ -1,12 +1,9 @@
 extends Node2D
 
-var rang_scene
+var star_scene
 
 var direction
-var speed
-var rate
-var duration
-var inverted = false
+var speed = 200
 
 var spatial_group = -1
 
@@ -14,33 +11,12 @@ var damage
 var aoe_range = 30
 var bonus_aoe = 0 # percentage?
 
-# Will hit enemies only once during each step of the movement
-var enemies_hit = []
-
 func _ready():
 	updateSpatialGroup()
-	#$CPUParticles2D.emission_sphere_radius *= 1 + bonus_aoe
-	#$CPUParticles2D.scale_amount_min *= 1 + bonus_aoe
 	aoe_range += 1 + bonus_aoe
 
-	rate = speed / duration
-
-	$AnimationPlayer.play("rang")
-	$AnimationPlayer.seek(randf())
-
 func _process(delta):
-	if inverted:
-		speed += rate * delta
-		position = position + (get_parent().get_node('Player').global_position - global_position).normalized() * speed * delta
-
-	else:
-		speed = max(speed - (rate * delta), 0)
-		position = position + direction * speed * delta
-
-		if speed <= 0:
-			inverted = true
-			enemies_hit = []
-
+	position = position + direction * speed * delta
 	updateSpatialGroup()
 	checkCollisions()
 
@@ -54,16 +30,14 @@ func checkCollisions():
 		if is_instance_valid(enemy):
 			var distance = (enemy.position - position).length()
 			if distance < aoe_range:
-				if not enemies_hit.has(enemy):
-					enemies_hit.append(enemy)
-					enemy.take_damage(damage)
-
-	if inverted:
-		var distance = (get_parent().get_node('Player').position - position).length()
-		if distance < aoe_range:
-			die()
+				enemy.take_damage(damage)
+				#die()
 
 func updateSpatialGroup():
+	if position.x <= 0 or position.x >= get_parent().MAP_WIDTH or position.y <= 0 or position.y >= get_parent().MAP_HEIGHT:
+		die()
+		return
+
 	var new_spatial_group = get_parent().getSpatialGroup(position.x, position.y)
 	if spatial_group < 0:
 		spatial_group = new_spatial_group
@@ -76,3 +50,6 @@ func updateSpatialGroup():
 func die():
 	get_parent().bullet_spatial_groups[spatial_group].erase(self)
 	queue_free()
+
+func _on_timer_timeout():
+	die()

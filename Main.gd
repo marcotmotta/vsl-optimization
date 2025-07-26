@@ -23,6 +23,7 @@ var player
 var WaveParams = WaveData.new()
 var current_cycle = 1
 var current_wave
+var bosses =  WaveParams.bosses
 
 func _ready():
 	randomize()
@@ -113,12 +114,34 @@ func _on_spawn_timer_timeout():
 					add_child(enemy_instance)
 					break
 
+func spawn_boss(current_level: int):
+	# Spawn a boss each round multiple by 8.
+	# 8, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, etc.
+	#
+	var type = bosses[current_level] if bosses.has(current_level) else bosses['default']
+	var enemy_instance = enemy_scenes[type].instantiate()
+
+	while(true):
+		# choose spawn point
+		var spawn_point = Vector2(
+			randi_range(player.global_position.x - 750, player.global_position.x + 750),
+			randi_range(player.global_position.y - 600, player.global_position.y + 600)
+		)
+
+		if ((spawn_point - player.global_position).length() > 550) and spawn_point.x > 0 and spawn_point.x < MAP_WIDTH and spawn_point.y > 0 and spawn_point.y < MAP_HEIGHT:
+			enemy_instance.global_position = spawn_point
+			enemy_instance.health_modifier = 0.2 * (current_cycle - 1)
+			enemy_instance.bonus_boss_health = current_level
+			enemy_instance.is_boss = true
+			add_child(enemy_instance)
+			break
+
 func go_to_next_level():
 	current_cycle += 1
 
 	# Check if there are more waves.
 	# This is basically a debug check.
-	if current_cycle < WaveParams.waves.size():
+	if current_cycle <= WaveParams.waves.size():
 		current_wave = WaveParams.waves[current_cycle]
 
 # debug

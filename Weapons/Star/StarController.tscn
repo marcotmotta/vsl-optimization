@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://g1aq6wch1vdh"]
+
+[ext_resource type="Script" uid="uid://bmqobyy0ea7rs" path="res://Weapons/Star/StarController.gd" id="1_fmsms"]
+
+[node name="StarController" type="Node2D"]
+script = ExtResource("1_fmsms")
+
+[node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 3.5
+autostart = true
+
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]

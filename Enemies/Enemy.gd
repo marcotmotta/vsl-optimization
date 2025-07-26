@@ -14,6 +14,9 @@ var spatial_group = -1
 
 var size = 13
 
+var is_boss = false
+var bonus_boss_health = 0
+
 var damage_number_scene = preload("res://DamageNumber/DamageNumber.tscn")
 
 func _ready():
@@ -27,6 +30,22 @@ func _ready():
 
 	health = max_health
 
+	# Boss variation:
+	if is_boss:
+		max_health *= bonus_boss_health * 10
+		health = max_health
+
+		size *= 1.5
+
+		damage *= 10
+
+		speed *= 1.2
+
+		$Sprite2D.modulate = '#969696'
+		$Sprite2D.scale *= 2
+
+		health_bar.visible = true
+
 func set_props() -> void: # This will be called by the children classes
 	pass
 
@@ -37,6 +56,13 @@ func _process(delta):
 
 	health_bar.max_value = max_health
 	health_bar.value = health
+
+	# Set look direction
+	if player.global_position.x < global_position.x:
+		$Sprite2D.flip_h = true
+
+	else:
+		$Sprite2D.flip_h = false
 
 func pushNearbyEnemies(delta):
 	var nearby_enemies = get_parent().enemies_spatial_groups[spatial_group]
@@ -51,12 +77,13 @@ func pushNearbyEnemies(delta):
 func updateSpatialGroup():
 	# FIXME: dunno.
 	# Despawn enemy if it goes too far from player
-	if global_position.x <= max(0, player.global_position.x - 800) or \
-	global_position.x >= min(get_parent().MAP_WIDTH, player.global_position.x + 800) or \
-	global_position.y <= max(0, player.global_position.y - 650) or \
-	global_position.y >= min(get_parent().MAP_HEIGHT, player.global_position.y + 650):
-		die(false)
-		return
+	if not is_boss:
+		if global_position.x <= max(0, player.global_position.x - 800) or \
+		global_position.x >= min(get_parent().MAP_WIDTH, player.global_position.x + 800) or \
+		global_position.y <= max(0, player.global_position.y - 650) or \
+		global_position.y >= min(get_parent().MAP_HEIGHT, player.global_position.y + 650):
+			die(false)
+			return
 
 	var new_spatial_group = get_parent().getSpatialGroup(position.x, position.y)
 	if spatial_group < 0:

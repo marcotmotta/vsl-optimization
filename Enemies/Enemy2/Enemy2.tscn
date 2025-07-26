@@ -1,17 +1,17 @@
 [gd_scene load_steps=3 format=3 uid="uid://mrg7whpy1o2a"]
 
 [ext_resource type="Script" uid="uid://b6mujkblf3cb5" path="res://Enemies/Enemy2/Enemy2.gd" id="1_harui"]
-[ext_resource type="Texture2D" uid="uid://b1j63r7erdkpy" path="res://icon.svg" id="2_bhg3y"]
+[ext_resource type="Texture2D" uid="uid://cfcd0hc6ppm73" path="res://Assets/zombie.png" id="2_harui"]
 
 [node name="Enemy2" type="Node2D" groups=["enemy"]]
 script = ExtResource("1_harui")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-modulate = Color(1, 1, 0, 1)
-scale = Vector2(0.2, 0.2)
-texture = ExtResource("2_bhg3y")
+scale = Vector2(2.3, 2.3)
+texture = ExtResource("2_harui")
 
 [node name="HealthBar" type="ProgressBar" parent="."]
+visible = false
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5

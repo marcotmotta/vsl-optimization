@@ -101,6 +101,37 @@ var abilities = [
 				"rarity": 8,
 			}
 		]
+	},
+	{
+		"name": "Star",
+		"rarity": 8,
+		"controller": preload("res://Weapons/Star/StarController.tscn"),
+		"upgrades": [
+			{
+				"name": "count",
+				"max_level": 4,
+				"rarity": 8,
+			},
+			{
+				"name": "damage",
+				"max_level": 2,
+				"rarity": 8,
+			}
+		]
+	}
+]
+
+var special_abilities = [
+	{
+		"name": "Movement Speed",
+		"rarity": 5, # Higher value = more common. Values: 8, 5, 3, 2, 1,
+		"upgrades": [
+			{
+				"name": "count",
+				"max_level": 2,
+				"rarity": 5,
+			}
+		]
 	}
 ]
 
@@ -113,12 +144,21 @@ var current_exp = 0
 
 var spatial_group = 0
 
-var speed = 100
+var base_speed = 80
 
 func move(_delta):
 	var input_direction = Input.get_vector("a", "d", "w", "s").normalized()
 
-	velocity = input_direction * speed
+	var speed_from_abilities = 0
+
+	if current_abilities.has('Movement Speed'):
+		speed_from_abilities = 20
+
+		if current_abilities['Movement Speed'].has('upgrades') and current_abilities['Movement Speed']['upgrades'].has('count'):
+			speed_from_abilities *= current_abilities['Movement Speed']['upgrades']['count'] + 1
+
+	velocity = input_direction * (base_speed + speed_from_abilities)
+
 	move_and_slide()
 
 func _process(delta):
@@ -140,8 +180,9 @@ func get_upgrade_level(ability_name, upgrade_name):
 func unlock_base(ability):
 	current_abilities.get_or_add(ability.name, {"unlocked": true, "upgrades": {}})
 
-	var ability_controller_instance = ability.controller.instantiate()
-	add_child(ability_controller_instance)
+	if ability.has('controller'):
+		var ability_controller_instance = ability.controller.instantiate()
+		add_child(ability_controller_instance)
 	
 	end_upgrade_logic()
 
@@ -154,24 +195,40 @@ func add_upgrade(ability, upgrade):
 # }}}
 
 # Level up {{{
-func get_upgrade_choices(num_choices = 3):
+func get_upgrade_choices(special = false, num_choices = 3):
 	var pool = []
 	var weights = []
 
-	# Base abilities:
-	for ability in abilities:
-		if not has_base(ability.name):
-			pool.append({"type": "base", "ability": ability})
-			weights.append(ability.rarity)
+	if not special:
+		# Base abilities:
+		for ability in abilities:
+			if not has_base(ability.name):
+				pool.append({"type": "base", "ability": ability})
+				weights.append(ability.rarity)
 
-	# Upgrades:
-	for ability in abilities:
-		if has_base(ability.name):
-			for upgrade in ability.upgrades:
-				var current_upgrade_level = get_upgrade_level(ability.name, upgrade.name)
-				if current_upgrade_level < upgrade.max_level:
-					pool.append({"type": "upgrade", "ability": ability, "upgrade": upgrade})
-					weights.append(upgrade.rarity)
+		# Upgrades:
+		for ability in abilities:
+			if has_base(ability.name):
+				for upgrade in ability.upgrades:
+					var current_upgrade_level = get_upgrade_level(ability.name, upgrade.name)
+					if current_upgrade_level < upgrade.max_level:
+						pool.append({"type": "upgrade", "ability": ability, "upgrade": upgrade})
+						weights.append(upgrade.rarity)
+
+		# Special upgrades can appear after they've been claimed.
+		for ability in special_abilities:
+			if has_base(ability.name):
+				for upgrade in ability.upgrades:
+					var current_upgrade_level = get_upgrade_level(ability.name, upgrade.name)
+					if current_upgrade_level < upgrade.max_level:
+						pool.append({"type": "upgrade", "ability": ability, "upgrade": upgrade})
+						weights.append(upgrade.rarity)
+
+	else:
+		for ability in special_abilities:
+			if not has_base(ability.name):
+				pool.append({"type": "base", "ability": ability})
+				weights.append(ability.rarity)
 
 	if pool.size() == 0:
 		return []
@@ -235,8 +292,34 @@ func level_up():
 	if current_level % 5 == 0:
 		get_parent().go_to_next_level()
 
+	if current_level % 8 == 0:
+		get_parent().spawn_boss(current_level)
+
 	var upgrade_choices = []
 	var choices = get_upgrade_choices() # Get new upgrade choices
+
+	if choices: # There are available upgrades on the pool
+		for choice in choices:
+			var upgrade_info = {}
+
+			if choice.type == "base":
+				upgrade_info.name = choice.ability.name
+				upgrade_info.callable = Callable(self, "unlock_base").bind(choice.ability)
+
+			else:
+				upgrade_info.name = ' '.join([choice.ability.name, choice.upgrade.name])
+				upgrade_info.callable = Callable(self, "add_upgrade").bind(choice.ability, choice.upgrade)
+
+			upgrade_choices.append(upgrade_info)
+
+		set_upgrade_buttons(upgrade_choices)
+
+	else: # Already got all upgrades
+		pass
+
+func get_special_upgrade():
+	var upgrade_choices = []
+	var choices = get_upgrade_choices(true) # Get new upgrade choices
 
 	if choices: # There are available upgrades on the pool
 		for choice in choices:
@@ -273,3 +356,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("f2"):
 		# placeholder for the player choosing an upgrade
 		level_up()
+
+	elif event.is_action_pressed("f3"):
+		# placeholder for the player choosing an upgrade
+		get_special_upgrade()
