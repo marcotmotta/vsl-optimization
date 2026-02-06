@@ -35,7 +35,6 @@ func checkCollisions():
 		if is_instance_valid(enemy):
 			var distance = (enemy.position - position).length()
 			if distance < aoe_range:
-				print(damage, enemy.health)
 				enemy.take_damage(damage)
 				if has_explosion: explode()
 				if bounce_count > 0: bounce()

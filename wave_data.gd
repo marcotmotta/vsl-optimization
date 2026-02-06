@@ -9,6 +9,7 @@ class_name WaveData # Makes this a global type
 @export var bosses: Dictionary = {
 	8: 'Enemy1',
 	16: 'Enemy2',
+	24: 'Enemy3',
 	'default': 'Enemy1'
 }
 
@@ -26,15 +27,15 @@ class_name WaveData # Makes this a global type
 		'enemy_types': ['Enemy1', 'Enemy2']
 	},
 	4: { # Level 15
-		'min_enemies': 50,
-		'enemy_types': ['Enemy1', 'Enemy2']
+		'min_enemies': 60,
+		'enemy_types': ['Enemy1']
 	},
 	5: { # Level 20
-		'min_enemies': 80,
-		'enemy_types': ['Enemy1']
+		'min_enemies': 60,
+		'enemy_types': ['Enemy3']
 	},
 	6: { # Level 25
 		'min_enemies': 80,
-		'enemy_types': ['Enemy1', 'Enemy2']
+		'enemy_types': ['Enemy1', 'Enemy2', 'Enemy3']
 	}
 }

@@ -16,6 +16,7 @@ var size = 13
 
 var is_boss = false
 var bonus_boss_health = 0
+var boss_drop_scene
 
 var damage_number_scene = preload("res://DamageNumber/DamageNumber.tscn")
 
@@ -39,12 +40,15 @@ func _ready():
 
 		damage *= 10
 
-		speed *= 1.2
+		speed *= 1.15
 
 		$Sprite2D.modulate = '#969696'
 		$Sprite2D.scale *= 2
 
 		health_bar.visible = true
+		health_bar.position.y = 40
+
+		boss_drop_scene = load("res://Drops/BossDrop.tscn")
 
 func set_props() -> void: # This will be called by the children classes
 	pass
@@ -108,6 +112,12 @@ func take_damage(amount: int):
 func die(give_exp: bool = true):
 	if give_exp:
 		player.get_exp(exp_value)
+
+	if is_boss:
+		var boss_drop_instance = boss_drop_scene.instantiate()
+		boss_drop_instance.global_position = global_position
+
+		get_parent().add_child(boss_drop_instance)
 
 	get_parent().enemies_spatial_groups[spatial_group].erase(self)
 	queue_free()

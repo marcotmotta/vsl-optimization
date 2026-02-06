@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://v8jcwfs50i1m"]
+[gd_scene load_steps=4 format=3 uid="uid://v8jcwfs50i1m"]
 
 [ext_resource type="Script" uid="uid://dkh1urxgj1dmd" path="res://Enemies/Enemy1/Enemy1.gd" id="1_ek32b"]
 [ext_resource type="Texture2D" uid="uid://fhxi7h4j0xc" path="res://Assets/skeleton.png" id="2_ek32b"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ek32b"]
+bg_color = Color(0.6, 0, 0, 1)
 
 [node name="Enemy1" type="Node2D" groups=["enemy"]]
 script = ExtResource("1_ek32b")
@@ -20,5 +23,6 @@ offset_top = 20.0
 offset_right = 25.0
 offset_bottom = 24.0
 grow_horizontal = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_ek32b")
 value = 50.0
 show_percentage = false

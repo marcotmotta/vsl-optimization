@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://j1tjf7t75lwo"]
+
+[ext_resource type="Texture2D" uid="uid://b1j63r7erdkpy" path="res://icon.svg" id="1_553ag"]
+[ext_resource type="Script" uid="uid://bb52td4fpdglu" path="res://Drops/Drop.gd" id="1_rggqf"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_553ag"]
+radius = 20.0
+
+[node name="BossDrop" type="Area2D"]
+script = ExtResource("1_rggqf")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_553ag")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_553ag")
+disabled = true
+
+[node name="ActivationTimer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="ActivationTimer" to="." method="_on_activation_timer_timeout"]

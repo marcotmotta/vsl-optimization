@@ -1,9 +1,9 @@
 extends Node2D
 
-const MAP_WIDTH = 3000
-const MAP_HEIGHT = 3000
-const CELLS_PER_ROW = 60
-const CELLS_PER_COL = 60
+const MAP_WIDTH = 18000
+const MAP_HEIGHT = 18000
+const CELLS_PER_ROW = 360
+const CELLS_PER_COL = 360
 # cell size: 50
 const CELL_WIDTH = MAP_WIDTH / CELLS_PER_ROW
 const CELL_HEIGHT = MAP_HEIGHT / CELLS_PER_COL
@@ -11,7 +11,8 @@ const TOTAL_CELLS = CELLS_PER_ROW * CELLS_PER_COL + 1
 
 var enemy_scenes = {
 	'Enemy1': preload("res://Enemies/Enemy1/Enemy1.tscn"),
-	'Enemy2': preload("res://Enemies/Enemy2/Enemy2.tscn")
+	'Enemy2': preload("res://Enemies/Enemy2/Enemy2.tscn"),
+	'Enemy3': preload("res://Enemies/Enemy3/Enemy3.tscn")
 }
 
 var enemies_spatial_groups = []

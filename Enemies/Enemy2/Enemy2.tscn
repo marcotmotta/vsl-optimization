@@ -1,16 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://mrg7whpy1o2a"]
+[gd_scene format=3 uid="uid://mrg7whpy1o2a"]
 
 [ext_resource type="Script" uid="uid://b6mujkblf3cb5" path="res://Enemies/Enemy2/Enemy2.gd" id="1_harui"]
 [ext_resource type="Texture2D" uid="uid://cfcd0hc6ppm73" path="res://Assets/zombie.png" id="2_harui"]
 
-[node name="Enemy2" type="Node2D" groups=["enemy"]]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_harui"]
+bg_color = Color(0.6, 0, 0, 1)
+
+[node name="Enemy2" type="Node2D" unique_id=1780986235 groups=["enemy"]]
 script = ExtResource("1_harui")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1820952458]
 scale = Vector2(2.3, 2.3)
 texture = ExtResource("2_harui")
 
-[node name="HealthBar" type="ProgressBar" parent="."]
+[node name="HealthBar" type="ProgressBar" parent="." unique_id=1469810579]
 visible = false
 anchors_preset = 5
 anchor_left = 0.5
@@ -20,5 +23,6 @@ offset_top = 18.0
 offset_right = 25.0
 offset_bottom = 22.0
 grow_horizontal = 2
+theme_override_styles/fill = SubResource("StyleBoxFlat_harui")
 value = 50.0
 show_percentage = false
