@@ -12,13 +12,13 @@ var damage
 var aoe_range = 30
 var bounce_count = 0
 var has_explosion = false
-var bonus_aoe = 0 # percentage?
+var bonus_aoe = 0 # percentage?	
 
 func _ready():
 	updateSpatialGroup()
-	$CPUParticles2D.emission_sphere_radius *= 1 + bonus_aoe
-	$CPUParticles2D.scale_amount_min *= 1 + bonus_aoe
-	aoe_range += 1 + bonus_aoe
+	$CPUParticles2D.emission_sphere_radius *= 1 + (bonus_aoe * 1.5) # scale of model grows bigger than actual aoe
+	$CPUParticles2D.scale_amount_min *= 1 +  (bonus_aoe * 1.5)
+	aoe_range *= 1 + bonus_aoe
 
 func _process(delta):
 	position = position + direction * speed * delta

@@ -19,9 +19,8 @@ var enemies_hit = []
 
 func _ready():
 	updateSpatialGroup()
-	#$CPUParticles2D.emission_sphere_radius *= 1 + bonus_aoe
-	#$CPUParticles2D.scale_amount_min *= 1 + bonus_aoe
-	aoe_range += 1 + bonus_aoe
+	$Sprite2D.scale *= 1 + (bonus_aoe * 1.5) # scale of model grows bigger than actual aoe
+	aoe_range *= 1 + bonus_aoe
 
 	rate = speed / duration
 

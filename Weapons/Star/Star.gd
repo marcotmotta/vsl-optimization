@@ -13,7 +13,8 @@ var bonus_aoe = 0 # percentage?
 
 func _ready():
 	updateSpatialGroup()
-	aoe_range += 1 + bonus_aoe
+	$Sprite2D.scale *= 1 + (bonus_aoe * 1.5) # scale of model grows bigger than actual aoe
+	aoe_range *= 1 + bonus_aoe
 
 func _process(delta):
 	position = position + direction * speed * delta
