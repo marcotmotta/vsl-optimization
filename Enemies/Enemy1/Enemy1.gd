@@ -1,7 +1,5 @@
 extends "res://Enemies/Enemy.gd"
 
+# Stats vêm do baseline · ameaça · arquétipo (ver Enemy.gd / WaveData.archetypes).
 func set_props() -> void:
-	max_health = 10
-	speed = 60
-	exp_value = 1
-	damage = 10
+	archetype_name = "Basic"

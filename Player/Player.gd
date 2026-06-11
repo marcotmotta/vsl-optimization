@@ -162,9 +162,10 @@ func move(_delta):
 	move_and_slide()
 
 func _process(delta):
-	# UI
-	$CanvasLayer/LevelLabel.text = 'current level: ' + str(current_level) +\
-	'\ncurrent cycle: ' + str(get_parent().current_cycle)
+	# UI: nível (progresso) + tier e tempo de run (ameaça).
+	var parent = get_parent()
+	var secs = int(parent.run_time)
+	$CanvasLayer/LevelLabel.text = 'level: %d   tier: %d\n%02d:%02d' % [current_level, parent.current_tier, secs / 60, secs % 60]
 
 	# Movement
 	move(delta)
@@ -289,11 +290,12 @@ func end_upgrade_logic():
 func level_up():
 	current_level += 1
 
-	if current_level % 5 == 0:
-		get_parent().go_to_next_level()
-
-	if current_level % 8 == 0:
-		get_parent().spawn_boss(current_level)
+	# O NÍVEL dirige só o PROGRESSO: mini-boss periódico e o boss FINAL no marco.
+	# (A dificuldade é dirigida pelo TEMPO — ver SCALING_DESIGN.md.)
+	if current_level == WaveData.WIN_LEVEL:
+		get_parent().spawn_final_boss()
+	elif current_level % WaveData.MINIBOSS_EVERY == 0:
+		get_parent().spawn_miniboss(current_level)
 
 	var upgrade_choices = []
 	var choices = get_upgrade_choices() # Get new upgrade choices

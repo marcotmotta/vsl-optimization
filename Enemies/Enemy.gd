@@ -1,11 +1,27 @@
 extends Node2D
 
+# =============================================================================
+# Inimigo base. Os stats são calculados no _ready a partir de:
+#   baseline (WaveData.BASE_*) · ameaça do tier (Main.threat_mult) · arquétipo.
+#
+# A AMEAÇA é lida no MOMENTO DO SPAWN -> stat TRAVADO (não muda depois). É o que
+# dilui o "degrau" de dificuldade na rotatividade dos spawns (ver SCALING_DESIGN.md).
+# =============================================================================
+
+# Arquétipo (a subclasse define em set_props). Multiplicadores em WaveData.archetypes.
+var archetype_name = "Basic"
+
+# Flags de boss — setadas pelo SPAWNER (Main) ANTES do add_child, para o _ready vê-las.
+var is_boss = false
+var is_final_boss = false
+var boss_k = 0          # HP do boss = BASE_HP · ameaça · boss_k
+var boss_drop_scene
+
 var exp_value: int
 var max_health: int
 var health: int
 var speed: int
 var damage: int
-var health_modifier: float
 
 var player
 var health_bar
@@ -14,10 +30,6 @@ var spatial_group = -1
 
 var size = 13
 
-var is_boss = false
-var bonus_boss_health = 0
-var boss_drop_scene
-
 var damage_number_scene = preload("res://DamageNumber/DamageNumber.tscn")
 
 func _ready():
@@ -25,22 +37,25 @@ func _ready():
 	player = get_parent().get_node('Player')
 	health_bar = get_node("HealthBar")
 
-	set_props()
-	
-	max_health *= 1 + health_modifier
+	set_props() # a subclasse define o archetype_name (e, opcionalmente, o size)
 
-	health = max_health
+	# Ameaça TRAVADA no spawn: lê o relógio do Main agora e não muda mais.
+	var threat: float = get_parent().threat_mult
+	var arch: Dictionary = WaveData.archetypes[archetype_name]
 
-	# Boss variation:
+	# Velocidade NÃO escala com a ameaça (é eixo de arquétipo apenas); senão os
+	# inimigos alcançariam o player só pela passagem do tempo, virando outro eixo
+	# de dificuldade fora do nosso controle.
+	speed = int(round(WaveData.BASE_SPEED * arch.speed_mult))
+	damage = int(round(WaveData.BASE_DAMAGE * threat * arch.dmg_mult))
+
 	if is_boss:
-		max_health *= bonus_boss_health * 10
-		health = max_health
-
-		size *= 1.5
+		# Boss: HP ignora o hp_mult do arquétipo e usa a constante K.
+		max_health = int(round(WaveData.BASE_HP * threat * boss_k))
 
 		damage *= 10
-
-		speed *= 1.15
+		speed = int(round(speed * 1.15))
+		size = int(round(size * 1.5))
 
 		$Sprite2D.modulate = '#969696'
 		$Sprite2D.scale *= 2
@@ -49,8 +64,17 @@ func _ready():
 		health_bar.position.y = 40
 
 		boss_drop_scene = load("res://Drops/BossDrop.tscn")
+	else:
+		max_health = int(round(WaveData.BASE_HP * threat * arch.hp_mult))
 
-func set_props() -> void: # This will be called by the children classes
+	health = max_health
+
+	# XP por kill ∝ HP^0.6 (botão da espiral, a≈0.6 — ver SCALING_DESIGN.md §5).
+	# Dividir por BASE_HP mantém "1 XP" para o inimigo base no tier 0.
+	exp_value = max(1, int(round(pow(float(max_health) / WaveData.BASE_HP, 0.6))))
+
+func set_props() -> void:
+	# Sobrescrito pelas subclasses (Enemy1/2/3) para declarar o arquétipo.
 	pass
 
 func _process(delta):
@@ -118,6 +142,10 @@ func die(give_exp: bool = true):
 		boss_drop_instance.global_position = global_position
 
 		get_parent().add_child(boss_drop_instance)
+
+	# Boss FINAL derrotado -> VITÓRIA.
+	if is_final_boss:
+		get_parent().on_final_boss_defeated()
 
 	get_parent().enemies_spatial_groups[spatial_group].erase(self)
 	queue_free()
