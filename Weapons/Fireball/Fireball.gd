@@ -9,10 +9,14 @@ var speed = 200
 var spatial_group = -1
 
 var damage
+var pierce = 2 # amount of enemies it can hit in one go
 var aoe_range = 30
+var bonus_aoe = 0 # percentage?
 var bounce_count = 0
 var has_explosion = false
-var bonus_aoe = 0 # percentage?	
+
+# Will hit enemies only once during each step of the movement
+var enemies_hit = []
 
 func _ready():
 	updateSpatialGroup()
@@ -35,10 +39,16 @@ func checkCollisions():
 		if is_instance_valid(enemy):
 			var distance = (enemy.position - position).length()
 			if distance < aoe_range:
-				enemy.take_damage(damage)
-				if has_explosion: explode()
-				if bounce_count > 0: bounce()
-				die()
+				if not enemies_hit.has(enemy):
+					enemies_hit.append(enemy)
+					enemy.take_damage(damage)
+					if has_explosion: explode()
+					if bounce_count > 0: bounce()
+
+					# check pierce
+					pierce -= 1
+					if pierce <= 0:
+						die()
 
 func updateSpatialGroup():
 	if position.x <= 0 or position.x >= get_parent().MAP_WIDTH or position.y <= 0 or position.y >= get_parent().MAP_HEIGHT:
@@ -75,6 +85,7 @@ func bounce():
 	fireball_instance.fireball_scene = fireball_scene
 	fireball_instance.global_position = global_position
 	fireball_instance.direction = selected_enemy.direction
+	fireball_instance.damage = damage
 	fireball_instance.bounce_count = bounce_count
 	fireball_instance.has_explosion = has_explosion
 	fireball_instance.bonus_aoe = bonus_aoe

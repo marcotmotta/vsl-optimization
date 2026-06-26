@@ -8,13 +8,21 @@ var speed = 200
 var spatial_group = -1
 
 var damage
+var pierce = 2 # amount of enemies it can hit in one go
 var aoe_range = 30
 var bonus_aoe = 0 # percentage?
 
+# Will hit enemies only once during each step of the movement
+var enemies_hit = []
+
 func _ready():
 	updateSpatialGroup()
-	$Sprite2D.scale *= 1 + (bonus_aoe * 1.5) # scale of model grows bigger than actual aoe
+	$Sprite2D.scale *= 1 + (bonus_aoe * 1.3) # scale of model grows bigger than actual aoe
 	aoe_range *= 1 + bonus_aoe
+
+	#debug
+	#print(aoe_range)
+	#$Area2D/CollisionShape2D.shape.radius = aoe_range
 
 func _process(delta):
 	position = position + direction * speed * delta
@@ -31,8 +39,14 @@ func checkCollisions():
 		if is_instance_valid(enemy):
 			var distance = (enemy.position - position).length()
 			if distance < aoe_range:
-				enemy.take_damage(damage)
-				#die()
+				if not enemies_hit.has(enemy):
+					enemies_hit.append(enemy)
+					enemy.take_damage(damage)
+
+					# check pierce
+					pierce -= 1
+					if pierce <= 0:
+						die()
 
 func updateSpatialGroup():
 	if position.x <= 0 or position.x >= get_parent().MAP_WIDTH or position.y <= 0 or position.y >= get_parent().MAP_HEIGHT:

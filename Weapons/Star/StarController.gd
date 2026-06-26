@@ -37,5 +37,5 @@ func _on_spawn_timer_timeout():
 			star_instance.global_position = global_position
 			star_instance.direction = selected_enemy.direction.rotated(deg_to_rad(shift))
 			star_instance.damage = 10 * (upgrades.get("damage", 0) + 1)
-			star_instance.bonus_aoe = 0
+			star_instance.bonus_aoe = upgrades.get("area", 0) * 0.2
 			map.add_child(star_instance)
