@@ -19,7 +19,7 @@ var enemies_hit = []
 
 func _ready():
 	updateSpatialGroup()
-	$Sprite2D.scale *= 1 + (bonus_aoe * 1.5) # scale of model grows bigger than actual aoe
+	$Sprite2D.scale *= 1 + (bonus_aoe * 1.3) # scale of model grows bigger than actual aoe
 	aoe_range *= 1 + bonus_aoe
 
 	rate = speed / duration

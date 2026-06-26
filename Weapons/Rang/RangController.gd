@@ -40,5 +40,5 @@ func _on_spawn_timer_timeout():
 			rang_instance.damage = 10 * (upgrades.get("damage", 0) + 1)
 			rang_instance.speed = base_speed + (upgrades.get("range", 0) * 200)
 			rang_instance.duration = base_duration
-			rang_instance.bonus_aoe = 0
+			rang_instance.bonus_aoe = upgrades.get("area", 0) * 0.2
 			map.add_child(rang_instance)

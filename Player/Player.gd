@@ -16,6 +16,11 @@ var abilities = [
 				"name": "damage",
 				"max_level": 2,
 				"rarity": 8,
+			},
+			{
+				"name": "area",
+				"max_level": 2,
+				"rarity": 8,
 			}
 		]
 	},
@@ -99,6 +104,11 @@ var abilities = [
 				"name": "damage",
 				"max_level": 2,
 				"rarity": 8,
+			},
+			{
+				"name": "area",
+				"max_level": 2,
+				"rarity": 8,
 			}
 		]
 	},
@@ -116,6 +126,11 @@ var abilities = [
 				"name": "damage",
 				"max_level": 2,
 				"rarity": 8,
+			},
+			{
+				"name": "area",
+				"max_level": 2,
+				"rarity": 8,
 			}
 		]
 	}
@@ -129,6 +144,18 @@ var special_abilities = [
 			{
 				"name": "count",
 				"max_level": 2,
+				"rarity": 5,
+			}
+		]
+	},
+	{
+		"name": "Fireball Bounce",
+		"rarity": 5, # Higher value = more common. Values: 8, 5, 3, 2, 1,
+		"requirements": ["Fireball"],
+		"upgrades": [
+			{
+				"name": "count",
+				"max_level": 1,
 				"rarity": 5,
 			}
 		]
@@ -165,7 +192,7 @@ func _process(delta):
 	# UI: nível (progresso) + tier e tempo de run (ameaça).
 	var parent = get_parent()
 	var secs = int(parent.run_time)
-	$CanvasLayer/LevelLabel.text = 'level: %d   tier: %d\n%02d:%02d' % [current_level, parent.current_tier, secs / 60, secs % 60]
+	$CanvasLayer/LevelLabel.text = 'level: %d   tier: %d\n%02d:%02d\n%d / %d' % [current_level, parent.current_tier, secs / 60, secs % 60, current_exp, 5 + current_level * 3]
 
 	# Movement
 	move(delta)

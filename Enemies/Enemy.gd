@@ -69,12 +69,12 @@ func _ready():
 
 	health = max_health
 
-	# XP por kill ∝ HP^0.6 (botão da espiral, a≈0.6 — ver SCALING_DESIGN.md §5).
+	# XP por kill ∝ HP^0.X (botão da espiral, a≈0.X — ver SCALING_DESIGN.md §5).
 	# Dividir por BASE_HP mantém "1 XP" para o inimigo base no tier 0.
-	exp_value = max(1, int(round(pow(float(max_health) / WaveData.BASE_HP, 0.6))))
+	exp_value = max(1, int(round(pow(float(max_health) / WaveData.BASE_HP, 0.3))))
 
 func set_props() -> void:
-	# Sobrescrito pelas subclasses (Enemy1/2/3) para declarar o arquétipo.
+	# Sobrescrito pelas subclasses (Enemy1/2/3/...) para declarar o arquétipo.
 	pass
 
 func _process(delta):

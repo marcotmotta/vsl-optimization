@@ -17,7 +17,7 @@ class_name WaveData # Makes this a global type
 # =============================================================================
 
 # --- Curva de ameaça (PROVISÓRIA; rever junto com a DPS/upgrades) ---
-const GROWTH: float = 1.1           # multiplicador de força por tier (+10%/degrau)
+const GROWTH: float = 1.25           # multiplicador de força por tier (+X%/degrau)
 const TIER_INTERVAL: float = 90.0   # segundos por tier
 
 # --- Stats baseline (a que os multiplicadores de arquétipo se aplicam) ---
@@ -27,7 +27,7 @@ const BASE_DAMAGE: int = 10
 
 # --- Progressão / final ---
 const WIN_LEVEL: int = 100      # nível que dispara o BOSS FINAL (vitória)
-const MINIBOSS_EVERY: int = 8   # mini-boss a cada N níveis
+const MINIBOSS_EVERY: int = 9   # mini-boss a cada N níveis
 
 # --- Tankiness dos bosses: HP = BASE_HP * ameaça * K ---
 const MINIBOSS_K: int = 25
@@ -42,8 +42,8 @@ const FINAL_BOSS_K: int = 80
 # Obs.: a velocidade NÃO escala com a ameaça — só com o arquétipo (ver Enemy.gd).
 const archetypes = {
 	"Basic": { "scene_key": "Enemy1", "hp_mult": 1.0, "speed_mult": 1.0,  "dmg_mult": 1.0 },
-	"Tank":  { "scene_key": "Enemy2", "hp_mult": 2.0, "speed_mult": 1.0,  "dmg_mult": 1.0 },
-	"Fast":  { "scene_key": "Enemy3", "hp_mult": 1.5, "speed_mult": 1.25, "dmg_mult": 1.0 },
+	"Tank":  { "scene_key": "Enemy2", "hp_mult": 1.5, "speed_mult": 1.0,  "dmg_mult": 1.0 },
+	"Fast":  { "scene_key": "Enemy3", "hp_mult": 1.2, "speed_mult": 1.25, "dmg_mult": 1.0 },
 }
 
 # --- Cronograma de ameaça (composição + densidade por tier) ----------------
@@ -52,13 +52,14 @@ const archetypes = {
 #   pool    = arquétipos que podem aparecer nesse tier.
 # Adicionar dificuldade = estender estas linhas (RASCUNHO — ajustar à vontade).
 const schedule = [
-	{ "tier": 0, "density": 10, "pool": ["Basic"] },
-	{ "tier": 1, "density": 25, "pool": ["Basic"] },
-	{ "tier": 2, "density": 40, "pool": ["Basic", "Tank"] },
-	{ "tier": 3, "density": 50, "pool": ["Basic", "Tank"] },
-	{ "tier": 4, "density": 60, "pool": ["Basic", "Tank", "Fast"] },
-	{ "tier": 5, "density": 70, "pool": ["Basic", "Tank", "Fast"] },
-	{ "tier": 6, "density": 80, "pool": ["Basic", "Tank", "Fast"] },
+	{ "tier": 0, "density": 10, "pool": ["Basic"] }, #00:00
+	{ "tier": 1, "density": 25, "pool": ["Tank"] },
+	{ "tier": 2, "density": 40, "pool": ["Basic", "Tank"] }, #03:00
+	{ "tier": 3, "density": 100, "pool": ["Basic"] },
+	{ "tier": 4, "density": 80, "pool": ["Fast"] }, #06:00
+	{ "tier": 5, "density": 100, "pool": ["Basic", "Tank", "Fast"] },
+	{ "tier": 6, "density": 120, "pool": ["Tank", "Fast"] }, #09:00
+	{ "tier": 7, "density": 140, "pool": ["Basic", "Tank", "Fast"] },
 ]
 
 # Retorna a linha do cronograma vigente para um dado tier

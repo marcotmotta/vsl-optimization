@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://8dy4uqxvj06l"]
+[gd_scene format=3 uid="uid://8dy4uqxvj06l"]
 
 [ext_resource type="Script" uid="uid://cdtro7w1ooiir" path="res://Player/Player.gd" id="1_4tjue"]
 [ext_resource type="Texture2D" uid="uid://b1j63r7erdkpy" path="res://icon.svg" id="1_8voul"]
@@ -7,23 +7,23 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_i80ac"]
 radius = 20.0
 
-[node name="Player" type="CharacterBody2D" groups=["player"]]
+[node name="Player" type="CharacterBody2D" unique_id=1448219298 groups=["player"]]
 z_index = 1
 script = ExtResource("1_4tjue")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=347657947]
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("1_8voul")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=985572804]
 shape = SubResource("CircleShape2D_i80ac")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2079421990]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1547361355]
 process_mode = 3
 
-[node name="UpgradeButtons" type="Control" parent="CanvasLayer"]
+[node name="UpgradeButtons" type="Control" parent="CanvasLayer" unique_id=1746404970]
 visible = false
 layout_mode = 3
 anchors_preset = 15
@@ -34,7 +34,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UpgradeButtons"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/UpgradeButtons" unique_id=1206278687]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -48,24 +48,24 @@ offset_bottom = 50.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="UpgradeButton1" type="Button" parent="CanvasLayer/UpgradeButtons/VBoxContainer"]
+[node name="UpgradeButton1" type="Button" parent="CanvasLayer/UpgradeButtons/VBoxContainer" unique_id=1806571708]
 layout_mode = 2
 text = "Option 1"
 
-[node name="UpgradeButton2" type="Button" parent="CanvasLayer/UpgradeButtons/VBoxContainer"]
+[node name="UpgradeButton2" type="Button" parent="CanvasLayer/UpgradeButtons/VBoxContainer" unique_id=1888219814]
 layout_mode = 2
 text = "Option 2"
 
-[node name="UpgradeButton3" type="Button" parent="CanvasLayer/UpgradeButtons/VBoxContainer"]
+[node name="UpgradeButton3" type="Button" parent="CanvasLayer/UpgradeButtons/VBoxContainer" unique_id=1497447150]
 layout_mode = 2
 text = "Option 3"
 
-[node name="LevelLabel" type="Label" parent="CanvasLayer"]
+[node name="LevelLabel" type="Label" parent="CanvasLayer" unique_id=477222722]
 offset_right = 40.0
 offset_bottom = 23.0
 text = "100"
 
-[node name="Timer" type="CanvasLayer" parent="."]
+[node name="Timer" type="CanvasLayer" parent="." unique_id=934220628]
 
-[node name="Timer" parent="Timer" instance=ExtResource("3_tok1r")]
+[node name="Timer" parent="Timer" unique_id=1972467501 instance=ExtResource("3_tok1r")]
 position = Vector2(640, 690)
