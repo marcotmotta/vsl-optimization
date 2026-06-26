@@ -159,6 +159,12 @@ var special_abilities = [
 				"rarity": 5,
 			}
 		]
+	},
+	{
+		"name": "Star Spiral",
+		"rarity": 5, # Higher value = more common. Values: 8, 5, 3, 2, 1,
+		"requirements": ["Star"],
+		"upgrades": []
 	}
 ]
 

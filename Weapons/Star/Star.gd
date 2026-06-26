@@ -2,6 +2,7 @@ extends Node2D
 
 var star_scene
 
+var origin
 var direction
 var speed = 200
 
@@ -11,11 +12,19 @@ var damage
 var pierce = 2 # amount of enemies it can hit in one go
 var aoe_range = 30
 var bonus_aoe = 0 # percentage?
+var spiral_mode = true
+
+# --- Espiral (Arquimedes): gira o ângulo e afasta o raio com o tempo ---
+var spiral_angle = 0.0           # ângulo atual (rad), começa apontando p/ direction
+var spiral_radius = 0.0          # distância atual da origem (px)
 
 # Will hit enemies only once during each step of the movement
 var enemies_hit = []
 
 func _ready():
+	origin = global_position
+	spiral_angle = direction.angle() # começa na direção em que foi mirado
+
 	updateSpatialGroup()
 	$Sprite2D.scale *= 1 + (bonus_aoe * 1.3) # scale of model grows bigger than actual aoe
 	aoe_range *= 1 + bonus_aoe
@@ -25,7 +34,15 @@ func _ready():
 	#$Area2D/CollisionShape2D.shape.radius = aoe_range
 
 func _process(delta):
-	position = position + direction * speed * delta
+	if spiral_mode:
+		# Avanca o angulo (curva) e o raio (afasta da origem)
+		spiral_angle += deg_to_rad(60) * delta
+		spiral_radius += speed * 0.7 * delta
+		# Converte polar -> cartesiano relativo a origem
+		position = origin + Vector2(cos(spiral_angle), sin(spiral_angle)) * spiral_radius
+	else:
+		position = position + direction * speed * delta
+
 	updateSpatialGroup()
 	checkCollisions()
 

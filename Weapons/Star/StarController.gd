@@ -28,6 +28,8 @@ func _get_closest_enemy():
 func _on_spawn_timer_timeout():
 	var selected_enemy = _get_closest_enemy()
 	if selected_enemy.enemy:
+		var star_spiral = get_parent().current_abilities.get("Star Spiral")
+
 		var count = upgrades.get("count", 0) + 1
 		var offset = 360 / count
 		for i in range(count):
@@ -38,4 +40,5 @@ func _on_spawn_timer_timeout():
 			star_instance.direction = selected_enemy.direction.rotated(deg_to_rad(shift))
 			star_instance.damage = 10 * (upgrades.get("damage", 0) + 1)
 			star_instance.bonus_aoe = upgrades.get("area", 0) * 0.2
+			star_instance.spiral_mode = !!star_spiral
 			map.add_child(star_instance)
